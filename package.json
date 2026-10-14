@@ -13,12 +13,14 @@
     "build:index": "node scripts/build-index.js",
     "build": "npm run vendor && npm run build:index",
     "export:pdf": "node scripts/export-pdf.js",
+    "export:pdf:cached": "node scripts/export-pdf-cached.js",
     "serve": "serve ."
   },
   "dependencies": {
     "reveal.js": "^5.2.1"
   },
   "devDependencies": {
+    "@actions/cache": "^6.3.0",
     "serve": "^14.2.4"
   }
 }

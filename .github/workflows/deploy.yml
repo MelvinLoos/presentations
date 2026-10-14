@@ -43,32 +43,25 @@ jobs:
       - name: Build Index Page
         run: npm run build:index
 
-      - name: Generate PDFs via DeckTape (Docker)
+      - name: Expose GitHub Runtime for @actions/cache
+        # De runner injecteert ACTIONS_RUNTIME_TOKEN + de cache-URL alleen in
+        # JavaScript-actions (`uses:`), niet in `run:`-stappen. Deze stap zet ze
+        # in GITHUB_ENV zodat de PDF-export de GitHub-cache kan gebruiken.
+        uses: actions/github-script@v7
+        with:
+          script: |
+            core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env['ACTIONS_RUNTIME_TOKEN'] || '');
+            core.exportVariable('ACTIONS_RESULTS_URL', process.env['ACTIONS_RESULTS_URL'] || '');
+            core.exportVariable('ACTIONS_CACHE_URL', process.env['ACTIONS_CACHE_URL'] || '');
+            core.exportVariable('ACTIONS_CACHE_SERVICE_V2', process.env['ACTIONS_CACHE_SERVICE_V2'] || 'True');
+
+      - name: Generate PDFs via DeckTape (incrementeel, gecached)
         # PDF-export is een nice-to-have: als DeckTape faalt, moeten de slides
         # alsnog gedeployed worden. Daarom blokkeert deze stap de deploy niet.
+        # Alleen gewijzigde presentaties worden opnieuw gerenderd; de rest komt
+        # uit de GitHub Actions-cache (zie scripts/export-pdf-cached.js).
         continue-on-error: true
-        run: |
-          # Mount de hele dist-map: de decks verwijzen relatief naar shared/
-          # (../../../../../shared/...), dus de root moet binnen de container kloppen.
-          # DeckTape draait als niet-root gebruiker in de container en kan anders de
-          # PDF niet wegschrijven in de gemounte map (EACCES). Maak de build-map
-          # daarom schrijfbaar voor iedereen.
-          chmod -R a+rwX dist/presentations
-          failures=0
-          while read -r presentation; do
-            rel="${presentation#dist/}"
-            rel="${rel%/index.html}"
-            echo "Genereren PDF voor: $rel"
-            if docker run --rm -v "$(pwd)/dist:/slides" astefanutti/decktape \
-                 --size 1920x1080 "/slides/$rel/index.html" "/slides/$rel/presentation.pdf"; then
-              echo "✔ PDF gegenereerd: $rel/presentation.pdf"
-            else
-              echo "⚠️ PDF genereren mislukt voor: $rel (deploy gaat door)"
-              failures=$((failures + 1))
-            fi
-          done < <(find dist/presentations -name "index.html" | sort)
-          echo "PDF-export afgerond: ${failures} presentatie(s) mislukt."
-          [ "$failures" -eq 0 ]
+        run: npm run export:pdf:cached
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
