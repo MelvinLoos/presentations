@@ -63,6 +63,17 @@ Open daarna een presentatie via de server, bijvoorbeeld
 > (`presentations/<cohort>/<jaar>/<vak>/<presentatie>/`). Nest je dieper of
 > ondieper, pas dan het aantal `../` in `index.html` aan.
 
+> **Markdown-scheidingstekens & frontmatter.** De wrapper splitst `slides.md`
+> met `data-separator="\n---\n\n"` en `data-separator-vertical="\n--\n\n"`.
+> Horizontale (`---`) en verticale (`--`) scheiders hebben dus **steeds een lege
+> regel ervoor én erna**. Dat is bewust: het YAML-frontmatter-blok bovenin
+> `slides.md` (dat geen lege regel rond de `---` heeft) wordt dan niet als slide
+> gezien. Zet in de frontmatter als laatste regel
+> `<!-- .slide: data-visibility="hidden" -->`; de markdown-plugin maakt er één
+> sectie van die reveal.js direct weer verbergt. Zo blijft de frontmatter
+> beschikbaar voor de portaalpagina (`scripts/build-index.js`) zonder als lege
+> of tekstslide in de presentatie te verschijnen.
+
 ## Scripts
 
 | Commando | Wat het doet |
@@ -110,6 +121,10 @@ renderen. `scripts/export-pdf-cached.js` cached daarom **per presentatie**:
 
 - **Slides-as-Code**: inhoud in Markdown met YAML-frontmatter; opmaak via de
   GLR-huisstijl (`shared/css/glr-theme.css`), niet via ad-hoc HTML/CSS.
+- **Markdown-scheiding**: horizontale `---` en verticale `--` elk met een lege
+  regel ervoor én erna; de frontmatter sluit af met
+  `<!-- .slide: data-visibility="hidden" -->` (zie de noot bij "Een nieuwe
+  presentatie maken").
 - **Didactiek**: leerdoelen ("Aan het einde van deze les kun je…"), actieve
   verwerkingsopdrachten en een afsluitende samenvatting. Zie de skill
   `reveal-slide-builder` en `educational-presentation-nl`.
