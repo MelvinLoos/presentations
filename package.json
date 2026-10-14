@@ -1,0 +1,24 @@
+{
+  "name": "glr-csd-presentations",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Reveal.js presentatie-monorepo voor de opleiding Creative Software Developer (MBO 4) van het Grafisch Lyceum Rotterdam.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "vendor": "node scripts/vendor-reveal.js",
+    "build:index": "node scripts/build-index.js",
+    "build": "npm run vendor && npm run build:index",
+    "export:pdf": "node scripts/export-pdf.js",
+    "serve": "serve ."
+  },
+  "dependencies": {
+    "reveal.js": "^5.2.1"
+  },
+  "devDependencies": {
+    "serve": "^14.2.4"
+  }
+}

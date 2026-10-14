@@ -1,6 +1,9 @@
-# Node afhankelijkheden
+# Node afhankelijkheden en build-output
 node_modules/
 dist/
+
+# Gekopieerde reveal.js-distributie (genereer met `npm run vendor`)
+shared/vendor/
 
 # Lokale brondocumenten en staging (alles negeren, behalve gitkeep)
 input/*

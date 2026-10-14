@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Titel van de les — GLR CSD</title>
+
+<!--
+  Deze wrapper laadt de inhoud uit slides.md met de reveal.js markdown-plugin
+  en de gedeelde GLR-huisstijl.
+
+  PADEN — let op:
+  Dit bestand hoort te staan in
+      presentations/<cohort>/<jaar>/<vak>/<presentatie>/
+  Dat is 5 niveaus onder de repo-root; daarom verwijst `../../../../../shared/`
+  naar de gedeelde map. Nest je een presentatie dieper of ondieper, pas dan het
+  aantal `../` aan (of hergebruik de opbouw van deze presentaties).
+
+  LOKAAL BEKIJKEN:
+  De markdown-plugin haalt slides.md op via HTTP, dus open dit bestand via een
+  servertje en niet via file:// →  `npm run serve` en ga naar /presentations/...
+-->
+
+<link rel="stylesheet" href="../../../../../shared/vendor/reveal/reveal.css">
+<link rel="stylesheet" href="../../../../../shared/vendor/reveal/plugin/highlight/monokai.css">
+<link rel="stylesheet" href="../../../../../shared/css/glr-theme.css">
+
+<style>
+  /* Presentatiespecifieke styling. Deelbare bouwstenen horen in
+     shared/css/glr-theme.css; zet hier alleen wat uniek is voor deze les. */
+</style>
+</head>
+<body>
+
+<div class="reveal">
+  <div class="slides">
+    <section
+      data-markdown="slides.md"
+      data-separator="^---$"
+      data-separator-vertical="^--$"
+      data-separator-notes="^Note:"
+      data-charset="utf-8"></section>
+  </div>
+</div>
+
+<script src="../../../../../shared/vendor/reveal/reveal.js"></script>
+<script src="../../../../../shared/vendor/reveal/plugin/markdown/markdown.js"></script>
+<script src="../../../../../shared/vendor/reveal/plugin/highlight/highlight.js"></script>
+<script src="../../../../../shared/vendor/reveal/plugin/notes/notes.js"></script>
+<script src="../../../../../shared/vendor/reveal/plugin/search/search.js"></script>
+<script src="../../../../../shared/vendor/reveal/plugin/zoom/zoom.js"></script>
+<script src="../../../../../shared/js/glr-plugins.js"></script>
+
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: false,
+    display: 'flex',
+    plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealSearch, RevealZoom],
+    markdown: { smartypants: true }
+  });
+</script>
+
+</body>
+</html>
