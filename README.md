@@ -68,7 +68,7 @@ Open daarna een presentatie via de server, bijvoorbeeld
 | Commando | Wat het doet |
 |---|---|
 | `npm run vendor` | Kopieert reveal.js uit `node_modules` naar `shared/vendor/` |
-| `npm run build:index` | Bouwt de portaalpagina `dist/index.html` uit de presentaties + frontmatter |
+| `npm run build:index` | Bouwt de portaalpagina `dist/index.html` (opvouwbare directory-tree met zoekfunctie) uit de presentaties + frontmatter |
 | `npm run build` | `vendor` + `build:index` |
 | `npm run export:pdf` | Exporteert elke presentatie naar `presentation.pdf` via DeckTape (Docker) |
 | `npm run export:pdf -- --local` | Idem, maar met een lokaal geïnstalleerde `decktape` |
@@ -78,8 +78,11 @@ Open daarna een presentatie via de server, bijvoorbeeld
 
 Bij elke push naar `main` draait `.github/workflows/deploy.yml`: dependencies
 installeren, reveal.js vendoren, de `dist/`-map opbouwen, per presentatie een PDF
-genereren en het geheel publiceren naar **GitHub Pages**. Op de portaalpagina
-(`dist/index.html`) staan per presentatie links naar de slides en de PDF.
+genereren en het geheel publiceren naar **GitHub Pages**. De portaalpagina
+(`dist/index.html`) toont alle presentaties als een opvouwbare mapstructuur
+(`cohort / jaar / vak / presentatie`) met per map het aantal presentaties, een
+zoekveld dat live filtert en markeert, en knoppen om alles in of uit te klappen.
+Per presentatie staan er links naar de slides en de PDF.
 
 ## Conventies
 
