@@ -1,0 +1,15 @@
+# Node afhankelijkheden
+node_modules/
+dist/
+
+# Lokale brondocumenten en staging (alles negeren, behalve gitkeep)
+input/*
+!input/.gitkeep
+
+# Lokale omgevingsvariabelen en OS-bestanden
+.env
+.DS_Store
+Thumbs.db
+
+# Gegenereerde PDF-bestanden tijdens lokale tests
+*.pdf

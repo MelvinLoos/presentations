@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BEROEPS2 · De bouwworkflow in 5 stappen | Stop De Ontkoking — Grafisch Lyceum Rotterdam</title>
+    <meta name="description" content="Lesflow voor BEROEPS2 (Stop De Ontkoking, GLR Food Freaks): in vijf stappen van design-oogst via epics en GitHub Projects-issues naar de Pull Request — met stand-up en pitches als ritme.">
+
+    <!-- Reveal.js basis -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/simple.min.css" id="theme">
+
+    <!-- GLR Media Creative - typografie -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* =========================================================
+           GLR Media Creative — design system
+           Canvas #faf9fd · structuur #1b1b1f · accent lime/kobalt
+           60-30-10 · 0px hoeken · Space Grotesk + Hanken Grotesk
+           ========================================================= */
+        :root {
+            --surface: #faf9fd;
+            --surface-subtle: #f4f4f6;
+            --surface-container: #efedf1;
+            --on-surface: #1b1b1f;
+            --on-surface-variant: #424936;
+            --primary: #416900;
+            --primary-container: #76b800;
+            --lime: #a6e22e;
+            --on-lime: #102000;
+            --ultramarine: #002bff;
+            --on-ultramarine: #ffffff;
+            --error: #ba1a1a;
+            --on-error: #ffffff;
+            --border: #e5e7eb;
+        }
+
+        * { box-sizing: border-box; }
+
+        html, body { background: var(--surface); }
+
+        .reveal {
+            font-family: "Hanken Grotesk", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 26px;
+            line-height: 1.45;
+            font-weight: 400;
+            color: var(--on-surface);
+            background: var(--surface);
+        }
+
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+            font-family: "Space Grotesk", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            color: var(--on-surface);
+            text-transform: none;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.05;
+            margin: 0 0 0.35em 0;
+            text-align: left;
+        }
+
+        .reveal h1 { font-size: 72px; letter-spacing: -0.03em; }
+        .reveal h2 { font-size: 50px; }
+        .reveal h3 { font-size: 30px; font-weight: 600; }
+        .reveal h4 { font-size: 22px; font-weight: 600; }
+
+        .reveal .slides { text-align: left; }
+        .reveal .slides section { text-align: left; padding: 0 8px; }
+
+        .reveal p, .reveal li {
+            font-size: 26px;
+            line-height: 1.5;
+            text-align: left;
+            margin: 0 0 0.5em 0;
+        }
+
+        .reveal strong { color: var(--primary); font-weight: 600; }
+
+        /* Eyebrow / label */
+        .eyebrow {
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--on-surface-variant);
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 22px;
+        }
+        .eyebrow::before {
+            content: "";
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background: var(--lime);
+        }
+
+        .lead { font-size: 32px; line-height: 1.4; color: var(--on-surface-variant); max-width: 30ch; }
+
+        /* Grids */
+        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+
+        /* Cards */
+        .card {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-top: 6px solid var(--primary);
+            padding: 26px 28px;
+            text-align: left;
+        }
+        .card .card-title { font-family: "Space Grotesk", sans-serif; font-size: 26px; font-weight: 600; line-height: 1.15; margin: 0 0 8px 0; }
+        .card .card-body { font-size: 22px; line-height: 1.4; color: var(--on-surface-variant); margin: 0; }
+        .card--team { border-top-color: var(--ultramarine); }
+        .card--team .num-sm { color: var(--ultramarine); }
+        .card--alert { border-top-color: var(--error); }
+
+        .num {
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 84px;
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: -0.04em;
+            color: var(--primary);
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        /* Accent = lime vlak, zwarte tekst (>=13:1) */
+        .accent-block { background: var(--lime); color: var(--on-lime); padding: 4px 12px; display: inline-block; }
+        .mark { background: var(--lime); color: var(--on-lime); padding: 0.06em 0.18em; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+
+        .num-sm {
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 56px;
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: -0.03em;
+            color: var(--primary);
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        /* Zone-kaart */
+        .zone { background: var(--surface-subtle); border-left: 6px solid var(--primary); padding: 22px 24px; }
+        .zone .zt { font-family: "Space Grotesk", sans-serif; font-size: 24px; font-weight: 600; margin-bottom: 6px; }
+        .zone .zb { font-size: 20px; line-height: 1.4; color: var(--on-surface-variant); margin: 0; }
+        .zone--blue { border-left-color: var(--ultramarine); }
+        .zone--alert { border-left-color: var(--error); }
+
+        /* Vergelijkingstabel (Git vs. bestanden sturen) */
+        .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .compare-col { border: 1px solid var(--border); background: #ffffff; }
+        .compare-head { font-family: "Space Grotesk", sans-serif; font-size: 22px; font-weight: 700; padding: 14px 20px; }
+        .compare-head--bad { background: var(--error); color: var(--on-error); }
+        .compare-head--good { background: var(--primary); color: #ffffff; }
+        .compare-row { font-size: 20px; line-height: 1.35; padding: 13px 20px; border-top: 1px solid var(--border); color: var(--on-surface); }
+        .compare-row code { font-size: 0.9em; }
+
+        /* Gitflow multi-branch diagram */
+        .branchmap { display: grid; gap: 14px; }
+        .branchmap-lanes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: stretch; }
+        .lane { border: 1px solid var(--border); background: #ffffff; border-top: 6px solid var(--ultramarine); padding: 18px; }
+        .lane .lane-dev { font-family: "Space Grotesk", sans-serif; font-size: 15px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ultramarine); margin-bottom: 10px; }
+        .lane .lane-branch { font-family: "Space Grotesk", sans-serif; font-size: 18px; font-weight: 600; background: var(--surface-container); padding: 6px 12px; display: inline-block; margin-bottom: 12px; }
+        .lane .lane-flow { display: flex; align-items: center; gap: 8px; font-family: "Space Grotesk", sans-serif; font-size: 16px; font-weight: 600; color: var(--on-surface-variant); }
+        .lane .lane-arrow { color: var(--primary); font-weight: 700; }
+        .branchmap-base { background: var(--primary); color: #ffffff; padding: 14px 22px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+        .branchmap-base .bm-label { font-family: "Space Grotesk", sans-serif; font-weight: 700; font-size: 22px; }
+        .branchmap-base .bm-note { font-size: 17px; }
+
+        /* Kanban-bord (GitHub Projects) */
+        .kanban { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; align-items: start; }
+        .kcol { border: 1px solid var(--border); background: #ffffff; border-top: 6px solid var(--primary); }
+        .kcol-head { font-family: "Space Grotesk", sans-serif; font-size: 19px; font-weight: 700; padding: 12px 16px; border-bottom: 1px solid var(--border); }
+        .kcol--blue { border-top-color: var(--ultramarine); }
+        .kcol--blue .kcol-head { color: var(--ultramarine); }
+        .kcol--lime .kcol-head { color: var(--primary); }
+        .kcard { font-size: 17px; line-height: 1.3; padding: 10px 14px; margin: 10px; background: var(--surface-container); color: var(--on-surface); }
+
+        /* Stappen / CTA */
+        .step { background: #ffffff; border: 1px solid var(--border); padding: 26px; }
+        .step .snum { font-family: "Space Grotesk", sans-serif; font-size: 40px; font-weight: 700; color: var(--primary); line-height: 1; margin-bottom: 10px; }
+        .step .st { font-family: "Space Grotesk", sans-serif; font-size: 26px; font-weight: 600; margin-bottom: 6px; }
+        .step .sb { font-size: 20px; color: var(--on-surface-variant); line-height: 1.4; margin: 0; }
+
+        .go-banner { background: var(--lime); color: var(--on-lime); padding: 22px 30px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+        .go-banner .go-label { font-family: "Space Grotesk", sans-serif; font-weight: 700; font-size: 34px; letter-spacing: -0.01em; }
+        .go-banner .go-sub { font-size: 20px; }
+
+        .flow { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+        .chip { background: var(--surface-container); border: 1px solid var(--border); padding: 10px 18px; font-family: "Space Grotesk", sans-serif; font-size: 20px; font-weight: 600; }
+        .chip--primary { background: var(--lime); color: var(--on-lime); border-color: var(--lime); }
+        .chip--blue { background: var(--ultramarine); color: var(--on-ultramarine); border-color: var(--ultramarine); }
+        .arrow { font-size: 26px; color: var(--primary); font-weight: 700; }
+
+        .kicker { font-size: 20px; color: var(--on-surface-variant); }
+        .muted { color: var(--on-surface-variant); }
+        .mt-s { margin-top: 18px; }
+        .mt-m { margin-top: 34px; }
+
+        /* Twee-koloms: tekst + beeld */
+        .split { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; align-items: start; }
+
+        /* Code / terminal in huisstijl (CODEOWNERS-voorbeeld) */
+        .reveal pre.code {
+            display: block;
+            font-family: "Space Grotesk", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            background: var(--on-surface);
+            color: #f2f0f4;
+            font-size: 24px;
+            line-height: 1.55;
+            font-weight: 500;
+            letter-spacing: 0;
+            text-align: left;
+            text-transform: none;
+            padding: 24px 30px;
+            margin: 34px 0 0 0;
+            width: 100%;
+            max-height: none;
+            border: 0;
+            border-left: 8px solid var(--lime);
+            border-radius: 0;
+            box-shadow: none;
+            overflow: auto;
+            white-space: pre;
+            word-wrap: normal;
+            tab-size: 4;
+        }
+        .reveal pre.code code {
+            display: block;
+            font-family: inherit;
+            font-size: inherit;
+            line-height: inherit;
+            background: none;
+            color: inherit;
+            padding: 0;
+            border: 0;
+            max-height: none;
+            overflow: visible;
+            white-space: pre;
+            word-wrap: normal;
+        }
+        .code .c { color: #a6e22e; }                    /* commentaar */
+        .code .p { color: #bcc2ff; font-weight: 700; }  /* patroon */
+        .code .u { color: #ffffff; font-weight: 700; }  /* @gebruikersnaam */
+        .code .k { color: #95da32; font-weight: 700; }  /* keyword */
+
+        /* Inline code in de lopende tekst */
+        .reveal code {
+            font-family: "Space Grotesk", ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 0.86em;
+            font-weight: 600;
+            background: var(--surface-container);
+            color: var(--on-surface);
+            padding: 0.04em 0.34em;
+        }
+
+        /* Progress + controls in huisstijl */
+        .reveal .progress { color: var(--primary); height: 5px; }
+        .reveal .controls { color: var(--primary); }
+
+        /* Focus zichtbaar voor toetsenbordgebruik */
+        .reveal a:focus, .reveal button:focus { outline: 3px solid var(--ultramarine); outline-offset: 2px; }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- 1 · Titel -->
+            <section>
+                <span class="eyebrow">Beroeps2 &middot; GLR Food Freaks &middot; Stop De Ontkoking</span>
+                <h1>Stop de ontkoking.</h1>
+                <h2><span class="mark">Van design-oogst naar Pull Request.</span></h2>
+                <p class="lead mt-m">Vandaag leer je de bouwworkflow in <strong>vijf stappen</strong>: van jullie Design Thinking-oogst, via epics en issues op een <strong>GitHub Project</strong>-bord, tot de <strong>Pull Request</strong> waarmee je team de kookapp voor <strong>GLR Food Freaks</strong> bouwt.</p>
+                <aside class="notes">
+                    Welkom terug bij BEROEPS2, project Stop De Ontkoking. Jullie opdrachtgever is GLR Food Freaks, jullie doelgroep de Gen Z-student: die bestelt te veel duur eten, wil gezond koken maar dan wel in maximaal twintig minuten. Jullie kookapp lost dat op. Het ontwerp is klaar &mdash; vandaag zet je het om in bouwen. Dat doen we in vijf vaste stappen: &eacute;&eacute;n, de Oogst &mdash; haal harde eisen uit je Design Thinking-documenten. Twee: van concept naar epics en user stories. Drie: een GitHub Project-werkbord inrichten. Vier: issues uitschrijven als mini-contracten. Vijf: bouwen en kwaliteit bewaken via pull requests. De stand-up en de pitch blijven het ritme. Ga bij je team zitten &mdash; we beginnen meteen.
+                </aside>
+            </section>
+
+            <!-- 2 · Reflectie (stand-up) -->
+            <section>
+                <span class="eyebrow">Opwarmer &middot; Reflectie</span>
+                <h2>Wat maakt jullie stand-up zinvol &mdash; en wanneer is hij tijdverspilling?</h2>
+                <p class="lead mt-m">Jullie draaien nu een paar weken een stand-up op het Stop De Ontkoking-project. Overleg met je buur en deel straks klassikaal: &eacute;&eacute;n ding dat goed werkt, en &eacute;&eacute;n ding dat beter kan.</p>
+                <aside class="notes">
+                    We trappen af met een reflectie. Jullie draaien nu een paar weken een stand-up. Vraag de klas: wat maakt een stand-up zinvol, en wanneer is hij tijdverspilling? Laat tweetallen twee minuten overleggen en inventariseer klassikaal: &eacute;&eacute;n ding dat goed werkt en &eacute;&eacute;n ding dat beter kan. Verzamel de antwoorden op het bord. Op de volgende slide hang je er de theorie aan: de 3 vragen, wie wat doet en waarom het bord actueel moet blijven.
+                </aside>
+            </section>
+
+            <!-- 3 · Daily stand-up -->
+            <section>
+                <span class="eyebrow">Ritme &middot; Daily stand-up</span>
+                <h2>Een stand-up houdt je project elke dag op koers</h2>
+                <div class="grid-3 mt-m">
+                    <div class="card">
+                        <h3 class="card-title">De 3 vragen</h3>
+                        <p class="card-body">Wat heb je gedaan? Wat ga je doen? Waar loop je vast? Kort, staand, max. 15 minuten.</p>
+                    </div>
+                    <div class="card card--team">
+                        <h3 class="card-title">De scrummaster</h3>
+                        <p class="card-body">Plaatst na de stand-up een <strong>samenvatting</strong> in het Teams-kanaal <span class="accent-block">Daily Standup</span>.</p>
+                    </div>
+                    <div class="card">
+                        <h3 class="card-title">Iedereen</h3>
+                        <p class="card-body">Zorgt dat het <strong>projectboard</strong> van de kookapp up-to-date is: klaar, bezig, geblokkeerd.</p>
+                    </div>
+                </div>
+                <div class="go-banner mt-m">
+                    <span class="go-label">Elke les, zelfde tijd</span>
+                    <span class="go-sub">Stand-up &rarr; samenvatting in Teams &rarr; bord bijgewerkt</span>
+                </div>
+                <aside class="notes">
+                    De daily stand-up is het hart van jullie ritme. Je staat kort bij elkaar en iedereen beantwoordt drie vragen: wat heb ik gedaan, wat ga ik doen, en waar loop ik vast. Het duurt maximaal een kwartier en draait om afstemmen, niet om verantwoording afleggen. Twee afspraken erbij: de scrummaster zet na elke stand-up een korte samenvatting in het Teams-kanaal 'Daily Standup', zodat wie er niet was het kan teruglezen. En iedereen zorgt dat het projectboard in GitHub klopt: welk issue is klaar, welk is bezig, en wat is geblokkeerd. Bij jullie kookapp bijvoorbeeld: 'filter op tijd' is klaar, 'recept-detail' is bezig, en het boodschappenlijst-issue zit geblokkeerd. Zo ziet het hele team in &eacute;&eacute;n oogopslag waar het staat.
+                </aside>
+            </section>
+
+            <!-- 4 · De bouw in 5 stappen -->
+            <section>
+                <span class="eyebrow">Vandaag &middot; De bouw in vijf stappen</span>
+                <h2>Van design-oogst naar Pull Request</h2>
+                <div class="grid-3 mt-m">
+                    <div class="step">
+                        <div class="snum">01</div>
+                        <div class="st">De Oogst</div>
+                        <p class="sb">Harde eisen uit de docs: empathize t/m test, moodboard en ERD.</p>
+                    </div>
+                    <div class="step">
+                        <div class="snum">02</div>
+                        <div class="st">Epics &amp; user stories</div>
+                        <p class="sb">Groepeer het prototype in modules en schrijf user stories.</p>
+                    </div>
+                    <div class="step">
+                        <div class="snum">03</div>
+                        <div class="st">GitHub Project</div>
+                        <p class="sb">Een Kanban-bord inrichten; afspraken in <code>TEAM.md</code>.</p>
+                    </div>
+                    <div class="step">
+                        <div class="snum">04</div>
+                        <div class="st">Issues uitschrijven</div>
+                        <p class="sb">Front-end en back-end taken met titel, beschrijving en criteria.</p>
+                    </div>
+                    <div class="step">
+                        <div class="snum">05</div>
+                        <div class="st">Bouw &amp; Pull Request</div>
+                        <p class="sb">Claim een issue, werk op een feature-branch en open een PR.</p>
+                    </div>
+                </div>
+                <p class="kicker mt-s">Het ritme eromheen: elke les een <strong>stand-up</strong> &middot; een <strong>pitch</strong> voor de Go/No-go.</p>
+                <aside class="notes">
+                    Dit is de route van vandaag, in vijf stappen. &Eacute;&eacute;n: de Oogst &mdash; voordat je bouwt, haal je harde eisen uit je Design Thinking-documenten. Twee: van concept naar epics en user stories. Drie: een GitHub Project-werkbord inrichten. Vier: issues uitschrijven als mini-contracten. Vijf: bouwen en kwaliteit bewaken met pull requests. Elke stap krijgt hierna eigen slides. Daaromheen loopt het vaste ritme: elke les een stand-up, en de pitch voor de Go/No-go. Na deze les kun je het hele traject zelf doorlopen in jullie eigen repository.
+                </aside>
+            </section>
+
+            <!-- 5 · Elevator pitches -->
+            <section>
+                <span class="eyebrow">Vandaag &middot; Elevator pitches</span>
+                <h2>De laatste teams halen hun definitieve akkoord op</h2>
+                <div class="grid-2 mt-m">
+                    <div class="card card--team">
+                        <h3 class="card-title">De pitchers</h3>
+                        <p class="card-body">Pitch jullie kookapp-concept aan de docent &mdash; in de rol van <strong>GLR Food Freaks</strong>. Doel: een <strong>Go</strong> of een <strong>No-go</strong>.</p>
+                        <div class="flow mt-s">
+                            <span class="chip chip--primary">Go</span>
+                            <span class="chip">No-go</span>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3 class="card-title">De andere teams</h3>
+                        <p class="card-body">Werken rustig door aan hun project: taken oppakken, branches maken, elkaars PR&rsquo;s reviewen.</p>
+                    </div>
+                </div>
+                <div class="grid-2 mt-m">
+                    <div class="zone">
+                        <div class="zt">Go</div>
+                        <p class="zb">Definitief akkoord: het concept is goedgekeurd, jullie bouwen verder aan de MVP.</p>
+                    </div>
+                    <div class="zone zone--alert">
+                        <div class="zt">No-go</div>
+                        <p class="zb">Nog niet akkoord: scherp het concept aan en pitch opnieuw op een afgesproken moment.</p>
+                    </div>
+                </div>
+                <aside class="notes">
+                    De teams die nog niet aan de beurt waren, pitchen vandaag hun concept. Je pitcht aan de docent, die de rol van GLR Food Freaks &mdash; jullie opdrachtgever &mdash; speelt. Aan het eind van de pitch krijg je een definitieve beslissing: een Go of een No-go. Een Go betekent: het concept is goedgekeurd, jullie mogen doorbouwen aan de MVP. Een No-go betekent: het is nog niet overtuigend genoeg, scherp het aan en kom op een afgesproken moment terug. Belangrijk: de andere teams gaan ondertussen gewoon rustig door met hun project. Er wordt verwacht dat je de tijd die je niet aan het pitchen bent, gebruikt om taken oppakken en code te reviewen.
+                </aside>
+            </section>
+
+            <!-- 6 · Stap 1: De Oogst -->
+            <section>
+                <span class="eyebrow">Stap 1 &middot; De Oogst</span>
+                <h2>Haal harde eisen uit je Design Thinking-documenten</h2>
+                <p class="lead mt-s">Voordat je bouwt, oogst je: elk document levert &eacute;&eacute;n eis op.</p>
+                <div class="grid-2 mt-m">
+                    <div class="card">
+                        <h3 class="card-title">Conclusies</h3>
+                        <p class="card-body">Analyseer <code>01-empathize.md</code> t/m <code>03-ideate.md</code>: het <strong>waarom</strong> en het <strong>wat</strong>.</p>
+                    </div>
+                    <div class="card card--team">
+                        <h3 class="card-title">Testfeedback</h3>
+                        <p class="card-body">Evalueer <code>05-test.md</code> en stel de definitieve functionaliteiten van <code>04-prototype.md</code> vast.</p>
+                    </div>
+                    <div class="card card--team">
+                        <h3 class="card-title">Visuele eisen</h3>
+                        <p class="card-body">Inventariseer kleur, type en stijl uit <code>moodboard.jpeg</code> en de rest van <code>docs/assets/</code>.</p>
+                    </div>
+                    <div class="card">
+                        <h3 class="card-title">Databasestructuur</h3>
+                        <p class="card-body">Vertaal <code>erd.jpeg</code> naar een lijst met <strong>tabellen en relaties</strong>.</p>
+                    </div>
+                </div>
+                <aside class="notes">
+                    Stap &eacute;&eacute;n: de Oogst. Voordat er ook maar een regel code geschreven wordt, halen we de harde eisen uit het ontwerpwerk. Vier bronnen. E&eacute;&eacute;n: jullie Design Thinking-documenten. Analyseer de conclusies uit 01-empathize.md tot en met 03-ideate.md &mdash; wie is de gebruiker, welk probleem lossen we op, welk concept kozen we en waarom. Twee: de testfase. Bekijk de feedback in 05-test.md en bepaal daarmee de definitieve functionaliteiten van jullie prototype in 04-prototype.md. Drie: het visuele. Haal de kleuren, lettertypes en stijl uit moodboard.jpeg en de andere assets in docs/assets/. Vier: de data. Vertaal het ERD in erd.jpeg naar een concrete lijst met tabellen en relaties, bijvoorbeeld: recepten (id, titel, tijd, budget), ingredi&euml;nten en favorieten. Dit is je boodschappenlijstje voor de rest van het project.
+                </aside>
+            </section>
+
+            <!-- 7 · Stap 1: van bevinding naar eis -->
+            <section>
+                <span class="eyebrow">Stap 1 &middot; Van bevinding naar eis</span>
+                <h2>Een oogst is pas nuttig als er een eis uit komt</h2>
+                <div class="compare mt-m">
+                    <div class="compare-col">
+                        <div class="compare-head compare-head--bad">Bevinding (in de docs)</div>
+                        <div class="compare-row">&ldquo;Studenten willen gezond eten, maar het mag max. 20 min. duren.&rdquo; <em>(01-empathize)</em></div>
+                        <div class="compare-row">&ldquo;De testpersonen vonden de knoppen te klein.&rdquo; <em>(05-test)</em></div>
+                        <div class="compare-row">&ldquo;erd.jpeg: recepten, ingredi&euml;nten, favorieten.&rdquo;</div>
+                    </div>
+                    <div class="compare-col">
+                        <div class="compare-head compare-head--good">Eis (voor de bouw)</div>
+                        <div class="compare-row">Recepten tonen hun bereidingstijd; filter op &lt; 20 min.</div>
+                        <div class="compare-row">Actieknoppen zijn minstens 44 bij 44 px.</div>
+                        <div class="compare-row">Tabellen: <code>recepten</code>, <code>ingredienten</code>, <code>favorieten</code>.</div>
+                    </div>
+                </div>
+                <div class="zone mt-m">
+                    <div class="zt">Zo werkt de Oogst</div>
+                    <p class="zb">Elke bevinding uit de docs vertaal je naar &eacute;&eacute;n concrete, testbare eis. Die eisen zijn de basis voor je epics en issues.</p>
+                </div>
+                <aside class="notes">
+                    Een oogst is pas nuttig als er een harde eis uit komt. Links zie je een bevinding zoals die in de documenten staat; rechts de eis die je ervan maakt voor de bouw. Bijvoorbeeld: de empathize-fase zegt 'studenten willen gezond eten, maar het mag maximaal twintig minuten duren' &mdash; dat wordt de eis 'recepten tonen hun bereidingstijd en je kunt filteren op onder de twintig minuten'. De testfase zegt 'de knoppen waren te klein' &mdash; dat wordt 'actieknoppen zijn minstens 44 bij 44 pixels'. En het ERD levert de tabellen: recepten, ingredi&euml;nten en favorieten. Zo wordt elke vage bevinding een concrete, testbare eis. Die eisen nemen we mee naar de volgende stap: epics en user stories.
+                </aside>
+            </section>
+
+            <!-- 8 · Stap 2: Epics -->
+            <section>
+                <span class="eyebrow">Stap 2 &middot; Epics defini&euml;ren</span>
+                <h2>Groepeer het prototype in grote modules: epics</h2>
+                <div class="flow mt-m" style="flex-direction:column; align-items:flex-start; gap:8px;">
+                    <span class="chip chip--primary">Epic &mdash; grote module</span>
+                    <span class="arrow" aria-hidden="true">&darr;</span>
+                    <span class="chip">User story &mdash; wat de gebruiker wil</span>
+                    <span class="arrow" aria-hidden="true">&darr;</span>
+                    <span class="chip chip--blue">Taak / issue &mdash; max. 1 dag werk</span>
+                </div>
+                <div class="grid-3 mt-m">
+                    <div class="card">
+                        <h3 class="card-title">Account &amp; favorieten</h3>
+                        <p class="card-body">Inloggen, profiel en recepten opslaan als favoriet.</p>
+                    </div>
+                    <div class="card card--team">
+                        <h3 class="card-title">Recepten &amp; filter</h3>
+                        <p class="card-body">Zoeken en filteren op tijd, budget en ingredi&euml;nten.</p>
+                    </div>
+                    <div class="card card--team">
+                        <h3 class="card-title">Boodschappenlijst</h3>
+                        <p class="card-body">Ingredi&euml;nten van een recept omzetten naar een lijst.</p>
+                    </div>
+                </div>
+                <aside class="notes">
+                    Stap twee: van concept naar epics. Een epic is een grote module &mdash; een verzameling functionaliteiten die logisch bij elkaar horen. Kijk naar jullie prototype en de eisen uit de Oogst, en groepeer. Voor de kookapp krijg je bijvoorbeeld drie epics: 'Account &amp; favorieten' (inloggen, profiel, recepten opslaan), 'Recepten &amp; filter' (zoeken en filteren op tijd, budget en ingredi&euml;nten) en 'Boodschappenlijst' (ingredi&euml;nten omzetten in een lijst). Elk epic splits je straks op in user stories, en elke user story in taken van maximaal &eacute;&eacute;n dag. Zo houd je overzicht over een groot project.
+                </aside>
+            </section>
+
+            <!-- 9 · Stap 2: user stories -->
+            <section>
+                <span class="eyebrow">Stap 2 &middot; User stories</span>
+                <h2>Schrijf per epic wat de gebruiker wil</h2>
+                <div class="grid-2 mt-m">
+                    <div class="card">
+                        <h3 class="card-title">Het formaat</h3>
+                        <p class="card-body"><strong>Als</strong> [gebruiker] <strong>wil ik</strong> [functie], <strong>zodat</strong> [waarde].</p>
+                        <p class="kicker mt-s">De gebruiker komt uit <code>empathy-map-v1.jpeg</code>.</p>
+                    </div>
+                    <div class="card card--team">
+                        <h3 class="card-title">Voorbeeld &mdash; epic &ldquo;Recepten &amp; filter&rdquo;</h3>
+                        <p class="card-body">&ldquo;Als Gen Z-student wil ik recepten filteren op tijd (&lt; 20 min) en budget, zodat ik snel en goedkoop iets gezonds kook in plaats van te bestellen.&rdquo;</p>
+                    </div>
+                </div>
+                <div class="zone zone--blue mt-m">
+                    <div class="zt">Denk klassikaal mee</div>
+                    <p class="zb">Splits samen: &ldquo;Als student wil ik recepten ontdekken die ik snel kan koken.&rdquo; Welke kleinere stories zie jij?</p>
+                </div>
+                <aside class="notes">
+                    Stap twee, de user stories. Per epic beschrijf je wat de eindgebruiker moet kunnen. De gebruiker ken je uit de empathy-map-v1.jpeg &mdash; in ons geval de Gen Z-student. Het formaat is vast: als [gebruiker] wil ik [functie], zodat [waarde]. Voorbeeld bij de epic 'Recepten &amp; filter': als Gen Z-student wil ik recepten filteren op tijd en budget, zodat ik binnen twintig minuten goedkoop iets gezonds kook in plaats van te bestellen. Dat dwingt je na te denken over v&oacute;&oacute;r wie je bouwt en welk nut het heeft. Denk klassikaal mee: splits samen de story 'als student wil ik recepten ontdekken die ik snel kan koken'. Welke kleinere stories zie je? Bijvoorbeeld: filteren op bereidingstijd, filteren op budget, filteren op ingredi&euml;nten die ik al heb, of sorteren op het snelste recept. Elk daarvan is weer een eigen stuk werk.
+                </aside>
+            </section>
+
+            <!-- 10 · Stap 3: GitHub Project -->
+            <section>
+                <span class="eyebrow">Stap 3 &middot; Het werkbord</span>
+                <h2>Richt een GitHub Project in als Kanban-bord</h2>
+                <p class="lead mt-s">Maak een Project aan, koppel het aan je repository, en sleep issues door de kolommen.</p>
+                <div class="kanban mt-m">
+                    <div class="kcol">
+                        <div class="kcol-head">To Do</div>
+                        <div class="kcard">#12 Filter op tijd</div>
+                        <div class="kcard">#13 Recept-detail</div>
+                    </div>
+                    <div class="kcol kcol--blue">
+                        <div class="kcol-head">In Progress</div>
+                        <div class="kcard">#14 Boodschappenlijst</div>
+                    </div>
+                    <div class="kcol kcol--blue">
+                        <div class="kcol-head">Review / Test</div>
+                        <div class="kcard">#11 Receptenlijst</div>
+                    </div>
+                    <div class="kcol kcol--lime">
+                        <div class="kcol-head">Done</div>
+                        <div class="kcard">#10 Inloggen</div>
+                    </div>
+                </div>
+                <aside class="notes">
+                    Stap drie: het werkbord. Maak in GitHub een Project aan en koppel dat aan jullie repository, zodat issues uit de repo automatisch op het bord verschijnen. Richt een Kanban-bord in met vier kolommen: To Do, In Progress, Review/Test en Done. Alles wat gebouwd wordt, staat als kaart op dit bord &mdash; niets gebeurt buiten het bord om. Sleep een kaart van To Do naar In Progress als je begint, naar Review/Test als het klaar is voor controle, en naar Done als het gereviewd en gemerged is. Zo ziet iedereen in &eacute;&eacute;n oogopslag wie waaraan werkt en wat blijft liggen. Vandaag koppel je de branch-conventie eraan: issue #12 wordt branch feature/#12-filter-tijd.
+                </aside>
+            </section>
+
+            <!-- 11 · Stap 3: afspraken in TEAM.md -->
+            <section>
+                <span class="eyebrow">Stap 3 &middot; Afspraken vastleggen</span>
+                <h2>Leg de samenwerking vast in <code>TEAM.md</code></h2>
+                <div class="grid-2 mt-m">
+                    <div class="card">
+                        <h3 class="card-title">Taakverdeling</h3>
+                        <p class="card-body">Wie pakt welk epic of issue? Wie is scrummaster? Wie reviewt?</p>
+                    </div>
+                    <div class="card card--team">
+                        <h3 class="card-title">Werkafspraken</h3>
+                        <p class="card-body">Wanneer is iets klaar? Hoe vaak stand-up? Hoe reviewen we elkaars PR&rsquo;s?</p>
+                    </div>
+                </div>
+                <div class="go-banner mt-m">
+                    <span class="go-label">Eén bron van waarheid</span>
+                    <span class="go-sub">Afspraken staan in <code>TEAM.md</code> in de repo &mdash; niet in losse chatberichten</span>
+                </div>
+                <aside class="notes">
+                    Bij stap drie hoort ook een afspraak op papier. Leg de samenwerking vast in een TEAM.md-bestand in jullie repository. Daarin staat bijvoorbeeld: wie pakt welk epic, wie is scrummaster, en wie reviewt wiens code. En de werkafspraken: wanneer is een taak klaar, hoe vaak doen we stand-up, en hoe reviewen we elkaars pull requests. Waarom in de repo en niet in de chat? Omdat het dan &eacute;&eacute;n bron van waarheid is, naast de code, en altijd terug te vinden. Zo weet iedereen wat er is afgesproken &mdash; ook als iemand een les mist.
+                </aside>
+            </section>
+
+            <!-- 12 · Stap 4: front-end & back-end issues -->
+            <section>
+                <span class="eyebrow">Stap 4 &middot; Issues uitschrijven</span>
+                <h2>Knip het werk op: front-end en back-end issues</h2>
+                <div class="grid-2 mt-m">
+                    <div class="card card--team">
+                        <h3 class="card-title">Front-end</h3>
+                        <p class="card-body">UI-componenten, met een verwijzing naar de styling uit <code>moodboard.jpeg</code>.</p>
+                        <p class="kicker mt-s">Bijv. &ldquo;Filter-balk met tijd en budget, volgens het moodboard.&rdquo;</p>
+                    </div>
+                    <div class="card card--team">
+                        <h3 class="card-title">Back-end</h3>
+                        <p class="card-body">Database en data, direct afgeleid van de entiteiten in <code>erd.jpeg</code>.</p>
+                        <p class="kicker mt-s">Bijv. &ldquo;Zet de tabel <code>recepten</code> op met tijd en budget.&rdquo;</p>
+                    </div>
+                </div>
+                <div class="zone mt-m">
+                    <div class="zt">&Eacute;&eacute;n taak per issue</div>
+                    <p class="zb">Houd elk issue klein genoeg voor &plusmn; &eacute;&eacute;n dag: dan kun je het los oppakken en parallel werken.</p>
+                </div>
+                <aside class="notes">
+                    Stap vier: issues uitschrijven. Knip het werk per epic op in losse issues, en let op het onderscheid tussen front-end en back-end. Front-end issues gaan over UI-componenten &mdash; en daarbij verwijs je meteen naar de stylingrichtlijnen uit moodboard.jpeg, zodat de vormgeving klopt. Back-end issues gaan over de database en data, direct afgeleid van de entiteiten in erd.jpeg; staat er een tabel 'recepten' in het ERD, dan komt daar een issue voor. Houd elk issue klein genoeg voor ongeveer &eacute;&eacute;n dag werk. Dan kun je het los oppakken, makkelijk reviewen, en met zijn allen parallel werken.
+                </aside>
+            </section>
+
+            <!-- 13 · Stap 4: structuur van een issue -->
+            <section>
+                <span class="eyebrow">Stap 4 &middot; Een goed issue</span>
+                <h2>Een issue is geen vage kreet, maar een mini-contract</h2>
+                <div class="grid-3 mt-m">
+                    <div class="step">
+                        <div class="snum">01</div>
+                        <div class="st">Titel</div>
+                        <p class="sb">Kort en concreet: &ldquo;Filter op bereidingstijd&rdquo;.</p>
+                    </div>
+                    <div class="step">
+                        <div class="snum">02</div>
+                        <div class="st">Beschrijving</div>
+                        <p class="sb">Wat moet er gebeuren, en waarom? Verwijs naar het epic.</p>
+                    </div>
+                    <div class="step">
+                        <div class="snum">03</div>
+                        <div class="st">Acceptatiecriteria</div>
+                        <p class="sb">Wanneer is het echt af? Concrete, testbare punten.</p>
+                    </div>
+                </div>
+                <div class="zone zone--blue mt-m">
+                    <div class="zt">Denk klassikaal mee</div>
+                    <p class="zb">Schrijf samen de acceptatiecriteria voor &ldquo;Filter op bereidingstijd&rdquo;. Wanneer is dit issue echt af?</p>
+                </div>
+                <aside class="notes">
+                    Een goed issue is het halve werk. Een issue is geen vage kreet, maar een mini-contract. Elk issue heeft drie dingen. &Eacute;&eacute;n: een duidelijke titel, kort en concreet, bijvoorbeeld 'Filter op bereidingstijd'. Twee: een beschrijving van de taak &mdash; wat moet er gebeuren en waarom, en bij welk epic het hoort. Drie: acceptatiecriteria &mdash; de afspraak over wanneer het echt af is. Bij het filter op bereidingstijd bijvoorbeeld: 'je kunt kiezen uit 15, 30 en 60 minuten', 'de lijst past direct aan', en 'zonder resultaten zie je een nette melding'. Die criteria maken het issue testbaar. Denk klassikaal mee: schrijf samen de acceptatiecriteria voor dit issue. Waar moet het filter allemaal aan voldoen voordat we het af noemen?
+                </aside>
+            </section>
+
+            <!-- 14 · Atomic = parallel -->
+            <section>
+                <span class="eyebrow">Stap 4 &rarr; 5 &middot; Waarom parallel</span>
+                <h2>Atomic taken laten 3&ndash;4 developers tegelijk bouwen</h2>
+                <div class="compare mt-m">
+                    <div class="compare-col">
+                        <div class="compare-head compare-head--bad">&Eacute;&eacute;n grote taak</div>
+                        <div class="compare-row">&ldquo;Bouw de kookapp&rdquo;</div>
+                        <div class="compare-row">E&eacute;n developer werkt, de rest wacht</div>
+                        <div class="compare-row">Alles hangt aan elkaar vast</div>
+                    </div>
+                    <div class="compare-col">
+                        <div class="compare-head compare-head--good">Atomic issues</div>
+                        <div class="compare-row">Filter op tijd &middot; Recept-detail &middot; Boodschappenlijst</div>
+                        <div class="compare-row">Iedereen pakt er &eacute;&eacute;n op, tegelijk</div>
+                        <div class="compare-row">Elk issue staat op zichzelf</div>
+                    </div>
+                </div>
+                <div class="go-banner mt-m">
+                    <span class="go-label">Zo werk je parallel</span>
+                    <span class="go-sub">Klein en zelfstandig werk = geen wachten, geen botsingen</span>
+                </div>
+                <aside class="notes">
+                    Waarom al dat opknippen? Omdat atomic taken parallel werken mogelijk maken. Links: &eacute;&eacute;n grote taak als 'bouw de kookapp'. Dan werkt &eacute;&eacute;n developer en moet de rest wachten &mdash; de taken hangen aan elkaar vast. Rechts: kleine, zelfstandige issues zoals 'filter op tijd', 'recept-detail' en 'boodschappenlijst'. Nu kan iedereen er &eacute;&eacute;n oppakken, tegelijk, zonder op elkaar te wachten. Dat is precies wat we straks met gitflow mogelijk maken: drie of vier mensen die tegelijk bouwen en daarna makkelijk samenvoegen.
+                </aside>
+            </section>
+
+            <!-- 15 · Gitflow: parallel + merge -->
+            <section>
+                <span class="eyebrow">Stap 5 &middot; Bouwen op een branch</span>
+                <h2>Claim een issue, maak een feature-branch en werk parallel</h2>
+                <div class="branchmap mt-m">
+                    <div class="branchmap-lanes">
+                        <div class="lane">
+                            <div class="lane-dev">dev 1 &middot; filter op tijd</div>
+                            <div class="lane-branch">feature/filter-tijd</div>
+                            <div class="lane-flow"><span>PR</span><span class="lane-arrow">&rarr;</span><span>review</span><span class="lane-arrow">&rarr;</span><span>merge</span></div>
+                        </div>
+                        <div class="lane">
+                            <div class="lane-dev">dev 2 &middot; recept-detail</div>
+                            <div class="lane-branch">feature/recept-detail</div>
+                            <div class="lane-flow"><span>PR</span><span class="lane-arrow">&rarr;</span><span>review</span><span class="lane-arrow">&rarr;</span><span>merge</span></div>
+                        </div>
+                        <div class="lane">
+                            <div class="lane-dev">dev 3 &middot; boodschappenlijst</div>
+                            <div class="lane-branch">feature/boodschappenlijst</div>
+                            <div class="lane-flow"><span>PR</span><span class="lane-arrow">&rarr;</span><span>review</span><span class="lane-arrow">&rarr;</span><span>merge</span></div>
+                        </div>
+                    </div>
+                    <div class="branchmap-base">
+                        <span class="bm-label">main &middot; protected</span>
+                        <span class="bm-note">Alle branches komen hier samen &mdash; altijd werkend</span>
+                    </div>
+                </div>
+                <aside class="notes">
+                    Stap vijf: de bouw. Je pakt een issue van het bord &mdash; je 'claimt' het &mdash; en maakt daarvoor een eigen feature-branch aan. Kijk naar de drie developers: de &eacute;&eacute;n bouwt het filter op bereidingstijd, de ander de recept-detailpagina, de derde de boodschappenlijst. Ze zitten elkaar niet in de weg, want ze raken main nooit direct aan. Elke branch gaat via een pull request met review terug naar main. Omdat jullie issues klein en zelfstandig zijn, blijven branches kort &mdash; daardoor bijna nooit conflicten en altijd makkelijk samen te voegen. De regel: main is altijd werkend; al het andere doe je op een eigen branch.
+                </aside>
+            </section>
+
+            <!-- 16 · Branches -->
+            <section>
+                <span class="eyebrow">Stap 5 &middot; De regels</span>
+                <h2>Twee soorten branches dekken al je werk</h2>
+                <div class="grid-3 mt-m">
+                    <div class="card">
+                        <h3 class="card-title"><code>main</code> &mdash; protected</h3>
+                        <p class="card-body">Altijd werkend en vergrendeld. Direct pushen kan niet; alles gaat via een pull request.</p>
+                    </div>
+                    <div class="card card--team">
+                        <h3 class="card-title"><code>feature/&hellip;</code></h3>
+                        <p class="card-body">Nieuw werk bouwen: <code>feature/filter-tijd</code>, <code>feature/recept-detail</code>. Eén taak per branch.</p>
+                    </div>
+                    <div class="card card--team">
+                        <h3 class="card-title"><code>fix/&hellip;</code></h3>
+                        <p class="card-body">Een bug verhelpen: <code>fix/aanmeldbug</code>, <code>fix/filter-bug</code>.</p>
+                    </div>
+                </div>
+                <div class="grid-3 mt-m">
+                    <div class="zone">
+                        <div class="zt">Eén issue = één branch</div>
+                        <p class="zb">Noem je branch naar het issue op je bord: <code>feature/#12-filter-tijd</code>.</p>
+                    </div>
+                    <div class="zone">
+                        <div class="zt">Kleine branches</div>
+                        <p class="zb">Kort en klein werk is makkelijker te reviewen en sneller te mergen.</p>
+                    </div>
+                    <div class="zone">
+                        <div class="zt">Duidelijke commits</div>
+                        <p class="zb">Schrijf <strong>wát + waarom</strong>. Geen <code>fix</code> of <code>stuff</code>.</p>
+                    </div>
+                </div>
+                <aside class="notes">
+                    Concreet: jullie gebruiken twee soorten branches. De main-branch is beschermd: GitHub blokkeert pushen naar main, je komt er alleen via een goedgekeurde pull request. Daarnaast heb je feature-branches voor nieuw werk, zoals feature/filter-tijd of feature/recept-detail, en fix-branches voor een bug, zoals fix/aanmeldbug. Noem de branch naar de taak, niet naar jezelf. Drie extra gewoontes. Eén: koppel je branch aan je bord — noem hem naar het issue, bijvoorbeeld feature/#12-filter-tijd, zodat werk overal bij elkaar hoort. Twee: houd branches klein en kort, dat is makkelijker te reviewen en sneller te mergen. Drie: schrijf duidelijke commit-berichten — wát je deed en waarom, niet 'fix' of 'stuff'. Zo snapt je team later nog wat er gebeurde.
+                </aside>
+            </section>
+
+            <!-- 17 · Stap 5: Pull Request + template -->
+            <section>
+                <span class="eyebrow">Stap 5 &middot; De Pull Request</span>
+                <h2>Open een PR naar <code>main</code> &mdash; met de vaste checklist</h2>
+                <p class="lead mt-s">Gebruik <code>.github/PULL_REQUEST_TEMPLATE.md</code>, zodat de review soepel loopt.</p>
+                <div class="grid-3 mt-m">
+                    <div class="card">
+                        <h3 class="card-title">Welke issues?</h3>
+                        <p class="card-body">Koppel de issue(s) die deze PR oplost, bijv. <code>Closes #12</code>.</p>
+                    </div>
+                    <div class="card card--team">
+                        <h3 class="card-title">Wat is getest?</h3>
+                        <p class="card-body">Welke acceptatiecriteria heb je gecontroleerd, en hoe?</p>
+                    </div>
+                    <div class="card card--team">
+                        <h3 class="card-title">Wie reviewt?</h3>
+                        <p class="card-body">Wijs je teamgenoten aan &mdash; automatisch via CODEOWNERS.</p>
+                    </div>
+                </div>
+                <div class="go-banner mt-m">
+                    <span class="go-label">Nooit direct naar main</span>
+                    <span class="go-sub">&Eacute;&eacute;n approve van een teamgenoot &mdash; d&aacute;n pas mergen</span>
+                </div>
+                <aside class="notes">
+                    Stap vijf, het tweede deel: de pull request. Als je code af is, push je je branch en open je een Pull Request naar main. Gebruik daarvoor verplicht de template in .github/PULL_REQUEST_TEMPLATE.md &mdash; dan vult iedereen systematisch hetzelfde in. Drie dingen staan daarin: welke issues deze PR oplost, bijvoorbeeld 'Closes #12'; wat je hebt getest, oftewel welke acceptatiecriteria je hebt gecontroleerd; en wie de code moet nakijken. Die reviewers worden automatisch voorgesteld via CODEOWNERS. De regel: je pusht nooit direct naar main &mdash; pas na minimaal &eacute;&eacute;n goedkeuring van een teamgenoot mag de PR gemerged worden.
+                </aside>
+            </section>
+
+            <!-- 18 · CODEOWNERS (code) -->
+            <section>
+                <span class="eyebrow">Stap 5 &middot; Automatische reviewers</span>
+                <h2>Wijs reviewers automatisch toe met &eacute;&eacute;n bestand: CODEOWNERS</h2>
+                <pre class="code" aria-label="Voorbeeld van een CODEOWNERS-bestand"><code><span class="c"># .github/CODEOWNERS</span>
+<span class="c"># Wijs je hele team automatisch toe als reviewer bij elke PR</span>
+
+<span class="p">*</span>   <span class="u">@jouw-naam</span>  <span class="u">@teamgenoot-2</span>  <span class="u">@teamgenoot-3</span></code></pre>
+                <div class="grid-3 mt-m">
+                    <div class="zone">
+                        <div class="zt"><code>#</code> commentaar</div>
+                        <p class="zb">Regels met een hekje zijn uitleg &mdash; die negeert GitHub.</p>
+                    </div>
+                    <div class="zone">
+                        <div class="zt"><code>*</code> alle bestanden</div>
+                        <p class="zb">Het sterretje betekent: deze regel geldt voor het hele project.</p>
+                    </div>
+                    <div class="zone">
+                        <div class="zt"><code>@naam</code> reviewer</div>
+                        <p class="zb">De GitHub-gebruikersnaam van iemand uit je team.</p>
+                    </div>
+                </div>
+                <aside class="notes">
+                    Nu de praktijk. Je kunt reviewers automatisch laten toewijzen met een klein bestandje: CODEOWNERS. Het staat in de map .github en heet precies CODEOWNERS, zonder extensie. Kijk naar het voorbeeld. Regels die met een hekje beginnen zijn commentaar, die negeert GitHub. De regel die telt begint met een sterretje: dat betekent 'geldt voor alle bestanden in het project'. Daarachter zet je de GitHub-gebruikersnamen van je teamleden, elk met een apenstaartje. Zet hier de echte gebruikersnamen van jullie team neer. Vanaf het moment dat dit bestand in main staat, wordt bij elke nieuwe pull request automatisch je hele team als reviewer voorgesteld en verplicht gesteld. En dat geldt niet alleen voor code: ook jullie Design Thinking-documenten in de /docs-map, zoals 01-empathize.md en 04-prototype.md, gaan via een pull request en worden door een teamgenoot gereviewd voordat ze naar main mogen.
+                </aside>
+            </section>
+
+            <!-- 19 · CODEOWNERS opzetten -->
+            <section>
+                <span class="eyebrow">Stap 5 &middot; Zo zet je het op</span>
+                <h2>Drie stappen naar automatische reviews</h2>
+                <div class="grid-3 mt-m">
+                    <div class="step">
+                        <div class="snum">01</div>
+                        <div class="st">Maak het bestand</div>
+                        <p class="sb">Voeg <code>.github/CODEOWNERS</code> toe in je repository, op de <code>main</code>-branch.</p>
+                    </div>
+                    <div class="step">
+                        <div class="snum">02</div>
+                        <div class="st">Zet je team erin</div>
+                        <p class="sb">Schrijf je gebruikersnamen (met <code>@</code>) achter <code>*</code>, gescheiden door spaties.</p>
+                    </div>
+                    <div class="step">
+                        <div class="snum">03</div>
+                        <div class="st">Zet de eis aan</div>
+                        <p class="sb">Vink bij branch protection <strong>&ldquo;Require review from Code Owners&rdquo;</strong> aan.</p>
+                    </div>
+                </div>
+                <div class="go-banner mt-m">
+                    <span class="go-label">Resultaat</span>
+                    <span class="go-sub">Elke PR krijgt automatisch je teamleden als verplichte reviewers</span>
+                </div>
+                <aside class="notes">
+                    Hoe zet je dit op in drie stappen? Stap &eacute;&eacute;n: maak in je repository een map .github en daarbinnen het bestand CODEOWNERS, op de main-branch. Stap twee: zet je team erin &mdash; schrijf de GitHub-gebruikersnamen, elk met een apenstaartje, achter het sterretje, gescheiden door spaties. Stap drie: dit is de belangrijkste &mdash; ga naar de branch protection-instellingen van je repository en vink 'Require review from Code Owners' aan. Pas d&aacute;n worden de eigenaren uit CODEOWNERS ook echt verplicht als reviewer. Het resultaat: elke pull request krijgt automatisch je teamleden als verplichte reviewers, en zonder &eacute;&eacute;n goedkeuring kan er niets naar main.
+                </aside>
+            </section>
+
+            <!-- 20 · Review-checklist -->
+            <section>
+                <span class="eyebrow">Stap 5 &middot; Zo review je een PR</span>
+                <h2>Een reviewer checkt vier dingen</h2>
+                <div class="grid-2 mt-m">
+                    <div class="card">
+                        <h3 class="card-title">Werkt het?</h3>
+                        <p class="card-body">Draait de feature zoals bedoeld? Test of het filter op bereidingstijd echt alleen recepten onder de 20 minuten toont.</p>
+                    </div>
+                    <div class="card">
+                        <h3 class="card-title">Is het leesbaar?</h3>
+                        <p class="card-body">Snap je de code? Duidelijke namen, geen dode code, geen onnodige rommel.</p>
+                    </div>
+                    <div class="card card--alert">
+                        <h3 class="card-title">Geen rommel of geheimen</h3>
+                        <p class="card-body">Geen wachtwoorden of API-keys, geen debug-logs of <code>console.log</code>-puin.</p>
+                    </div>
+                    <div class="card card--team">
+                        <h3 class="card-title">Kleine, duidelijke stap</h3>
+                        <p class="card-body">Eén helder doel per PR, met een titel en uitleg die je meteen snapt.</p>
+                    </div>
+                </div>
+                <aside class="notes">
+                    Je hebt een PR gekregen om te reviewen — bijvoorbeeld de branch feature/filter-tijd — wat kijk je dan na? Vier dingen. Eén: werkt het? Test of het filter echt alleen recepten onder de twintig minuten toont. Twee: is het leesbaar? Snap je de code, zijn de namen duidelijk, staat er geen dode code in? Drie: geen rommel of geheimen — geen wachtwoorden of API-keys, geen debug-logs of console.log die je vergeet weg te halen. Vier: is het één kleine, duidelijke stap met een heldere titel en uitleg? Reageer vriendelijk en concreet: een compliment plus een concrete tip werkt beter dan 'ik snap het niet'. Je keurt pas goed als je echt tevreden bent.
+                </aside>
+            </section>
+
+            <!-- 21 · Wat niet in Git -->
+            <section>
+                <span class="eyebrow">Stap 5 &middot; Een schone repo</span>
+                <h2>Niet alles hoort in de repository</h2>
+                <div class="grid-3 mt-m">
+                    <div class="card card--alert">
+                        <h3 class="card-title">Geheimen</h3>
+                        <p class="card-body">Wachtwoorden, API-keys, tokens &mdash; nooit in Git. Zet ze in een <code>.env</code>-bestand.</p>
+                    </div>
+                    <div class="card card--alert">
+                        <h3 class="card-title">Lokale rommel</h3>
+                        <p class="card-body">Lokale configuraties (<code>.env</code>, <code>.DS_Store</code>, editor-instellingen), <code>node_modules</code> en zware bestanden horen er niet in.</p>
+                    </div>
+                    <div class="card">
+                        <h3 class="card-title">De oplossing: <code>.gitignore</code></h3>
+                        <p class="card-body">Zet in <code>.gitignore</code> wat Git moet negeren &mdash; en leef het na. Zo blijft je repo schoon en veilig.</p>
+                    </div>
+                </div>
+                <aside class="notes">
+                    Tot slot een gewoonte die je repo netjes houdt: niet alles hoort in Git. Geheimen zoals wachtwoorden, API-keys en tokens komen nooit in de repository — als je die per ongeluk commit, moet je ze meteen intrekken en vervangen, want de geschiedenis onthoudt alles. En irrelevante bestanden horen er ook niet in: lokale configuraties zoals een .env-bestand, .DS_Store of editor-instellingen, de map node_modules, en zware bestanden. De oplossing is het .gitignore-bestand: daarin zet je wat Git moet negeren &mdash; en je leeft het na, want anders sluipt die rommel alsnog mee in je pull request. Let bij jullie kookapp ook op de Figma-bronbestanden: die horen niet in de repo; de ge&euml;xporteerde PNG's in docs/assets/ w&eacute;l. Zo blijft je repo schoon en veilig.
+                </aside>
+            </section>
+
+            <!-- 22 · Afronding -->
+            <section>
+                <span class="eyebrow">Afronding &middot; Onthoud dit</span>
+                <h2>Van design-oogst naar Pull Request &mdash; in vijf stappen</h2>
+                <div class="grid-3 mt-m">
+                    <div class="zone">
+                        <div class="zt">1 &middot; De Oogst</div>
+                        <p class="zb">Harde eisen uit je Design Thinking-docs.</p>
+                    </div>
+                    <div class="zone">
+                        <div class="zt">2 &middot; Epics &amp; user stories</div>
+                        <p class="zb">Grote modules, klein gemaakt.</p>
+                    </div>
+                    <div class="zone">
+                        <div class="zt">3 &middot; GitHub Project</div>
+                        <p class="zb">Kanban-bord + afspraken in <code>TEAM.md</code>.</p>
+                    </div>
+                    <div class="zone">
+                        <div class="zt">4 &middot; Issues</div>
+                        <p class="zb">Mini-contracten met acceptatiecriteria.</p>
+                    </div>
+                    <div class="zone">
+                        <div class="zt">5 &middot; Bouw &amp; PR</div>
+                        <p class="zb">Feature-branch + Pull Request met review.</p>
+                    </div>
+                </div>
+                <aside class="notes">
+                    We sluiten af. Dit is de bouwworkflow in vijf stappen, en je kunt hem vanaf nu zelf draaien. Eén: de Oogst &mdash; haal harde eisen uit je Design Thinking-documenten. Twee: van concept naar epics en user stories. Drie: een GitHub Project-werkbord inrichten, met je afspraken in TEAM.md. Vier: issues uitschrijven als mini-contracten met acceptatiecriteria. Vijf: bouwen op een feature-branch en kwaliteit bewaken met een pull request en review. En het ritme eromheen: elke les een stand-up en een pitch voor de Go/No-go. Zo brengen jullie Stop De Ontkoking stap voor stap naar een werkende kookapp. Vragen? Steek je hand op, dan loop ik zo langs.
+                </aside>
+            </section>
+
+
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/notes/notes.min.js"></script>
+    <script>
+        Reveal.initialize({
+            width: 1280,
+            height: 720,
+            margin: 0.06,
+            hash: true,
+            controls: true,
+            progress: true,
+            center: true,
+            slideNumber: 'c/t',
+            transition: 'slide',
+            plugins: [ RevealNotes ]
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebXR · Week 3 — Sfeer, Modellen &amp; Illusie | Grafisch Lyceum Rotterdam</title>
+    <meta name="description" content="Lesflow voor WebXR week 3 (Tier 1 · Foundations): externe 3D-modellen (GLTF/GLB) inladen, licht en schaduw instellen en objecten animeren om de strandwereld tot leven te brengen.">
+
+    <!-- Reveal.js basis -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/simple.min.css" id="theme">
+
+    <!-- GLR Media Creative - typografie -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* =========================================================
+           GLR Media Creative — design system
+           Canvas #faf9fd · structuur #1b1b1f · accent lime/kobalt
+           60-30-10 · 0px hoeken · Space Grotesk + Hanken Grotesk
+           ========================================================= */
+        :root {
+            --surface: #faf9fd;
+            --surface-subtle: #f4f4f6;
+            --surface-container: #efedf1;
+            --on-surface: #1b1b1f;
+            --on-surface-variant: #424936;
+            --primary: #416900;
+            --primary-container: #76b800;
+            --lime: #a6e22e;
+            --on-lime: #102000;
+            --ultramarine: #002bff;
+            --on-ultramarine: #ffffff;
+            --error: #ba1a1a;
+            --on-error: #ffffff;
+            --border: #e5e7eb;
+        }
+
+        * { box-sizing: border-box; }
+
+        html, body { background: var(--surface); }
+
+        .reveal {
+            font-family: "Hanken Grotesk", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 26px;
+            line-height: 1.45;
+            font-weight: 400;
+            color: var(--on-surface);
+            background: var(--surface);
+        }
+
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+            font-family: "Space Grotesk", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            color: var(--on-surface);
+            text-transform: none;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.05;
+            margin: 0 0 0.35em 0;
+            text-align: left;
+        }
+
+        .reveal h1 { font-size: 72px; letter-spacing: -0.03em; }
+        .reveal h2 { font-size: 50px; }
+        .reveal h3 { font-size: 30px; font-weight: 600; }
+        .reveal h4 { font-size: 22px; font-weight: 600; }
+
+        .reveal .slides { text-align: left; }
+        .reveal .slides section { text-align: left; padding: 0 8px; }
+
+        .reveal p, .reveal li {
+            font-size: 26px;
+            line-height: 1.5;
+            text-align: left;
+            margin: 0 0 0.5em 0;
+        }
+
+        .reveal strong { color: var(--primary); font-weight: 600; }
+
+        /* Eyebrow / label */
+        .eyebrow {
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--on-surface-variant);
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 22px;
+        }
+        .eyebrow::before {
+            content: "";
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background: var(--lime);
+        }
+
+        .lead { font-size: 32px; line-height: 1.4; color: var(--on-surface-variant); max-width: 32ch; }
+        .kicker { font-size: 20px; color: var(--on-surface-variant); }
+        .muted { color: var(--on-surface-variant); }
+        .mt-s { margin-top: 18px; }
+        .mt-m { margin-top: 34px; }
+
+        /* Grids */
+        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+        /* Cards */
+        .card {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-top: 6px solid var(--primary);
+            padding: 26px 28px;
+            text-align: left;
+        }
+        .card .card-title { font-family: "Space Grotesk", sans-serif; font-size: 26px; font-weight: 600; line-height: 1.15; margin: 0 0 8px 0; }
+        .card .card-body { font-size: 22px; line-height: 1.4; color: var(--on-surface-variant); margin: 0; }
+        .card--blue { border-top-color: var(--ultramarine); }
+        .card--alert { border-top-color: var(--error); }
+        .card--alert .card-title { color: var(--error); }
+
+        .num {
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 84px;
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: -0.04em;
+            color: var(--primary);
+            display: block;
+            margin-bottom: 6px;
+        }
+        .num-sm {
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 56px;
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: -0.03em;
+            color: var(--primary);
+            display: block;
+            margin-bottom: 12px;
+        }
+        .num-sm--blue { color: var(--ultramarine); }
+
+        /* Accent = lime vlak, zwarte tekst (>=13:1) */
+        .accent-block { background: var(--lime); color: var(--on-lime); padding: 4px 12px; display: inline-block; }
+        .mark { background: var(--lime); color: var(--on-lime); padding: 0.06em 0.18em; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+
+        /* Zone-kaart */
+        .zone { background: var(--surface-subtle); border-left: 6px solid var(--primary); padding: 22px 24px; }
+        .zone .zt { font-family: "Space Grotesk", sans-serif; font-size: 24px; font-weight: 600; margin-bottom: 6px; }
+        .zone .zb { font-size: 20px; line-height: 1.4; color: var(--on-surface-variant); margin: 0; }
+        .zone--blue { border-left-color: var(--ultramarine); }
+        .zone--lime { border-left-color: var(--lime); }
+
+        /* Stappen / CTA */
+        .step { background: #ffffff; border: 1px solid var(--border); padding: 26px; }
+        .step .snum { font-family: "Space Grotesk", sans-serif; font-size: 40px; font-weight: 700; color: var(--primary); line-height: 1; margin-bottom: 10px; }
+        .step .st { font-family: "Space Grotesk", sans-serif; font-size: 26px; font-weight: 600; margin-bottom: 6px; }
+        .step .sb { font-size: 20px; color: var(--on-surface-variant); line-height: 1.4; margin: 0; }
+
+        .go-banner { background: var(--lime); color: var(--on-lime); padding: 22px 30px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+        .go-banner .go-label { font-family: "Space Grotesk", sans-serif; font-weight: 700; font-size: 34px; letter-spacing: -0.01em; }
+        .go-banner .go-sub { font-size: 20px; }
+
+        .flow { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+        .flow--col { flex-direction: column; align-items: flex-start; gap: 8px; }
+        .chip { background: var(--surface-container); border: 1px solid var(--border); padding: 10px 18px; font-family: "Space Grotesk", sans-serif; font-size: 20px; font-weight: 600; }
+        .chip--primary { background: var(--lime); color: var(--on-lime); border-color: var(--lime); }
+        .chip--blue { background: var(--ultramarine); color: #ffffff; border-color: var(--ultramarine); }
+        .arrow { font-size: 26px; color: var(--primary); font-weight: 700; }
+
+        /* Twee-koloms: tekst + code/beeld */
+        .split { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; align-items: start; }
+        .split--code { grid-template-columns: 0.9fr 1.1fr; gap: 30px; align-items: center; }
+        .split--code .card-title { font-size: 22px; }
+        .split--code .card-body { font-size: 18px; }
+        .split--code .kicker { font-size: 18px; }
+
+        /* Checklist (afvinkbaar stappenplan) */
+        .checklist { list-style: none; margin: 0; padding: 0; }
+        .checklist li { position: relative; padding-left: 46px; margin: 0 0 16px 0; font-size: 24px; line-height: 1.35; }
+        .checklist li:last-child { margin-bottom: 0; }
+        .checklist li::before { content: ""; position: absolute; left: 0; top: 3px; width: 26px; height: 26px; border: 3px solid var(--primary); }
+        .checklist li strong { display: inline; }
+
+        /* Codeblok (A-Frame / HTML) — donker vlak, lime tags */
+        .code {
+            background: var(--on-surface);
+            color: #f2f0f4;
+            font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+            font-size: 17px;
+            line-height: 1.55;
+            padding: 22px 24px;
+            margin: 0;
+            overflow-x: auto;
+            white-space: pre;
+            tab-size: 2;
+            border-left: 6px solid var(--lime);
+        }
+        .code--sm { font-size: 15px; }
+        .code .c-tag { color: #95da32; }
+        .code .c-attr { color: #bcc2ff; }
+        .code .c-str { color: #ffd76e; }
+        .code .c-com { color: #9a9f90; font-style: italic; }
+
+        /* Lichtbronnen-diagram (pure CSS, geen afbeelding) */
+        .light-card { background: #ffffff; border: 1px solid var(--border); border-top: 6px solid var(--primary); padding: 16px 18px 18px; }
+        .light-viz { height: 118px; background: #15151a; margin-bottom: 14px; position: relative; overflow: hidden; }
+        .light-viz--ambient { background: radial-gradient(circle at 50% 55%, rgba(166,226,46,0.55) 0%, rgba(166,226,46,0.12) 45%, #15151a 78%); }
+        .light-viz--directional::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(125deg, rgba(166,226,46,0.5) 0 2px, transparent 2px 17px); }
+        .light-viz--directional .disc { position: absolute; top: 22px; left: 24px; width: 34px; height: 34px; border-radius: 50%; background: #f2ffd6; box-shadow: 0 0 22px rgba(166,226,46,0.85); }
+        .light-viz--point::after { content: ""; position: absolute; top: 50%; left: 50%; width: 112px; height: 112px; border-radius: 50%; transform: translate(-50%,-50%); box-shadow: 0 0 0 2px rgba(166,226,46,0.35), 0 0 0 4px rgba(166,226,46,0.16); }
+        .light-viz--point .disc { position: absolute; top: 50%; left: 50%; width: 22px; height: 22px; border-radius: 50%; background: #f2ffd6; transform: translate(-50%,-50%); box-shadow: 0 0 30px rgba(166,226,46,0.9); }
+        .light-card .lc-t { font-family: "Space Grotesk", sans-serif; font-size: 24px; font-weight: 600; margin: 0 0 6px; }
+        .light-card .lc-b { font-size: 18px; line-height: 1.38; color: var(--on-surface-variant); margin: 0; }
+
+        /* Progress + controls in huisstijl */
+        .reveal .progress { color: var(--primary); height: 5px; }
+        .reveal .controls { color: var(--primary); }
+
+        /* Focus zichtbaar voor toetsenbordgebruik */
+        .reveal a:focus, .reveal button:focus { outline: 3px solid var(--ultramarine); outline-offset: 2px; }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <!-- 1 · Aandacht: opening van de week -->
+            <section>
+                <span class="eyebrow">WebXR · Week 3 · Sfeer, Modellen &amp; Illusie</span>
+                <h1>Van blokken naar een levende wereld.</h1>
+                <h2><span class="mark">Modellen, licht en beweging brengen je strand tot leven.</span></h2>
+                <p class="lead mt-m">Week 1 gaf je de ruimte, week 2 de zintuigen. Deze week halen we de grijze blokken weg en geven we je wereld een <strong>ziel</strong>.</p>
+                <aside class="notes">
+                    Welkom bij week 3 van de WebXR-module. Jullie hebben al een strandscène gebouwd met primitieven en er interactie en geluid aan gehangen. Maar een wereld van grijze dozen voelt nog niet echt. Vandaag en morgen leren jullie drie technieken om dat te veranderen: echte 3D-modellen inladen, licht en schaduw instellen, en objecten laten bewegen. Dat is het verschil tussen een technische demo en een ervaring die je zintuigen prikkelt. Pak je project erbij, want je gaat het direct toepassen.
+                </aside>
+            </section>
+
+            <!-- 2 · Status: waar staan we -->
+            <section>
+                <span class="eyebrow">Status · Waar staan we?</span>
+                <h2>De ruimte en de zintuigen staan &mdash; nu komt de sfeer</h2>
+                <div class="flow mt-m">
+                    <span class="chip">Ruimte &amp; primitieven</span>
+                    <span class="arrow" aria-hidden="true">&rarr;</span>
+                    <span class="chip">Interactie &amp; audio</span>
+                    <span class="arrow" aria-hidden="true">&rarr;</span>
+                    <span class="chip chip--primary">Sfeer &amp; illusie</span>
+                    <span class="arrow" aria-hidden="true">&rarr;</span>
+                    <span class="chip">Deploy &amp; showcase</span>
+                </div>
+                <div class="grid-2 mt-m">
+                    <div class="zone">
+                        <div class="zt">Al gedaan</div>
+                        <p class="zb">Een herkenbare scène met <strong>primitieven</strong>, minimaal twee interactieve objecten en ruimtelijk geluid &mdash; alles op GitHub.</p>
+                    </div>
+                    <div class="zone zone--blue">
+                        <div class="zt">Deze week</div>
+                        <p class="zb">Primitieven vervangen door <strong>echte modellen</strong>, <strong>belichting</strong> en <strong>schaduwen</strong>, en beweging toevoegen met animaties.</p>
+                    </div>
+                </div>
+                <aside class="notes">
+                    Even de tussenstand. Week 1 heb je de ruimte opgebouwd met primitieven, week 2 heb je er klik-events en geluid aan gekoppeld. Dat staat allemaal op GitHub. Vandaag slaan we de brug naar het echte werk: de tijdelijke blokken gaan eruit en echte modellen komen erin, je zet licht en schaduw neer, en je laat dingen bewegen. Zo wordt het verschil tussen 'een technische demo' en 'een wereld die leeft'. Dat is precies wat de rubric onder '3D & Omgeving' en 'Go Wild' beloont.
+                </aside>
+            </section>
+
+            <!-- 3 · Leerdoelen (Gagné 2) -->
+            <section>
+                <span class="eyebrow">Leerdoelen · Aan het einde van deze week</span>
+                <h2>Wat je na deze week kunt</h2>
+                <div class="grid-4 mt-m">
+                    <div class="card">
+                        <span class="num-sm">01</span>
+                        <h3 class="card-title">Modellen inladen</h3>
+                        <p class="card-body">Je laadt een extern <strong>GLTF/GLB</strong>-model in je scène en lost schaalproblemen op.</p>
+                    </div>
+                    <div class="card">
+                        <span class="num-sm">02</span>
+                        <h3 class="card-title">Belichting zetten</h3>
+                        <p class="card-body">Je gebruikt <strong>ambient</strong>-, <strong>directional</strong>- en <strong>point</strong>-lights en beheerst schaduwen.</p>
+                    </div>
+                    <div class="card card--blue">
+                        <span class="num-sm num-sm--blue">03</span>
+                        <h3 class="card-title">Animaties maken</h3>
+                        <p class="card-body">Je laat objecten <strong>roteren en zweven</strong> met het animation-component.</p>
+                    </div>
+                    <div class="card card--blue">
+                        <span class="num-sm num-sm--blue">04</span>
+                        <h3 class="card-title">Sfeer neerzetten</h3>
+                        <p class="card-body">Je vertaalt het <strong>gevoel van het strand</strong> naar je eigen wereld.</p>
+                    </div>
+                </div>
+                <aside class="notes">
+                    Dit zijn de leerdoelen van week 3. Aan het einde van de week kun je: een extern GLTF- of GLB-model inladen en het op de juiste schaal en plek zetten; ambient-, directional- en point-lights toepassen en schaduwen aanzetten; objecten laten roteren en zweven met het animation-component; en het gevoel van de strandexcursie vertalen naar je eigen wereld. Die vier doelen komen allemaal terug in sessie 5 (theorie) en sessie 6 (productie) en in de rubric.
+                </aside>
+            </section>
+
+            <!-- 4 · Voorkennis activeren (Gagné 3) -->
+            <section>
+                <span class="eyebrow">Voorkennis · Denk 30 seconden na</span>
+                <h2>Wat maakt een 3D-wereld &laquo;echt&raquo;?</h2>
+                <p class="kicker mt-s">Welk element heeft volgens jou het grootste effect? Kies er één &mdash; straks kom je erop terug.</p>
+                <div class="grid-2 mt-m">
+                    <div class="zone"><div class="zt">A &middot; Meer objecten</div><p class="zb">Zo veel mogelijk modellen in de scène proppen.</p></div>
+                    <div class="zone zone--blue"><div class="zt">B &middot; Licht &amp; kleur</div><p class="zb">Een warme zon, schaduwen en een kloppend kleurenpalet.</p></div>
+                    <div class="zone zone--blue"><div class="zt">C &middot; Beweging</div><p class="zb">Golven, zwevende objecten en kleine animaties.</p></div>
+                    <div class="zone"><div class="zt">D &middot; Geluid</div><p class="zb">Ruimtelijk geluid dat meebeweegt met je blik.</p></div>
+                </div>
+                <aside class="notes">
+                    Voordat we de theorie induiken, een korte denkvraag. Wat maakt nu dat een 3D-wereld echt voelt? Laat studenten kort nadenken en er één kiezen, bespreek het daarna met de buur. De meeste kiezen B of C. De les van vandaag: het is de combinatie. Méér objecten toevoegen helpt bijna nooit. Licht, schaduw en beweging zijn juist de krachtige, goedkope middelen — daar zit het verschil tussen een blokkendoos en een levende wereld. Noteer de antwoorden op het bord; je kunt er aan het einde van de les op terugkomen.
+                </aside>
+            </section>
+
+            <!-- 5 · Sessie 5 intro -->
+            <section>
+                <span class="eyebrow">Sessie 5 · Theorie &amp; Techniek · 90 min</span>
+                <h2>Drie technieken voor sfeer en illusie</h2>
+                <div class="grid-3 mt-m">
+                    <div class="step">
+                        <div class="snum">25 min</div>
+                        <div class="st">Modellen inladen</div>
+                        <p class="sb">GLTF/GLB-bestanden in je scène zetten (&mdash; en waarom ze soms reusachtig of piepklein zijn).</p>
+                    </div>
+                    <div class="step">
+                        <div class="snum">25 min</div>
+                        <div class="st">Licht &amp; schaduw</div>
+                        <p class="sb">Ambient, directional (de zon) en point lights, plus <strong>castShadow</strong> en <strong>receiveShadow</strong>.</p>
+                    </div>
+                    <div class="step">
+                        <div class="snum">25 min</div>
+                        <div class="st">A-Frame animaties</div>
+                        <p class="sb">Het <strong>animation</strong>-component: roteren, zweven, met loop, alternate en easing.</p>
+                    </div>
+                </div>
+                <div class="zone zone--lime mt-m">
+                    <div class="zt">Daarna &middot; 15 min solo oefening</div>
+                    <p class="zb">Je laat een ingeladen model zweven &eacute;n ronddraaien onder een spotlight.</p>
+                </div>
+                <aside class="notes">
+                    Sessie 5 is de theorie- en technieksessie. We doen drie blokken van ongeveer 25 minuten, met een live demo en meecodeer-momenten, en sluiten af met 15 minuten waarin je het zelf toepast. Eerst: modellen inladen. Daarna: licht en schaduw. Dan: animaties. De oefening onderaan is de brug naar sessie 6, waarin je dit allemaal op je eigen eindopdracht loslaat.
+                </aside>
+            </section>
+
+            <!-- 6 · Modellen inladen (Gagné 4) -->
+            <section>
+                <span class="eyebrow">Sessie 5 · Modellen inladen</span>
+                <h2>Primitieven zijn leuk &mdash; modellen zijn beter</h2>
+                <div class="split split--code mt-m">
+                    <div>
+                        <div class="card">
+                            <h3 class="card-title">Zo werkt het</h3>
+                            <p class="card-body">Je laadt het bestand eerst in bij <strong>&lt;a-assets&gt;</strong> met een <strong>id</strong>, en plaats het op je scène met het <strong>gltf-model</strong>-component. Het id is je verwijzing.</p>
+                        </div>
+                        <div class="card card--alert mt-s">
+                            <h3 class="card-title">Pas op: schaal</h3>
+                            <p class="card-body">Modellen komen in hun eigen eenheden. Een vuurtoren kan ineens 40 meter zijn &mdash; stel <strong>scale</strong> bij tot het klopt.</p>
+                        </div>
+                    </div>
+                    <pre class="code code--sm"><code>&lt;<span class="c-tag">a-scene</span>&gt;
+  &lt;<span class="c-tag">a-assets</span>&gt;
+    &lt;<span class="c-tag">a-asset-item</span> <span class="c-attr">id</span>=<span class="c-str">"schelp"</span>
+      <span class="c-attr">src</span>=<span class="c-str">"assets/shell.glb"</span>&gt;&lt;/<span class="c-tag">a-asset-item</span>&gt;
+    &lt;<span class="c-tag">a-asset-item</span> <span class="c-attr">id</span>=<span class="c-str">"vuurtoren"</span>
+      <span class="c-attr">src</span>=<span class="c-str">"assets/lighthouse.glb"</span>&gt;&lt;/<span class="c-tag">a-asset-item</span>&gt;
+  &lt;/<span class="c-tag">a-assets</span>&gt;
+
+  &lt;<span class="c-tag">a-entity</span> <span class="c-attr">gltf-model</span>=<span class="c-str">"#schelp"</span>
+            <span class="c-attr">position</span>=<span class="c-str">"1 0.2 -3"</span>
+            <span class="c-attr">scale</span>=<span class="c-str">"0.5 0.5 0.5"</span>&gt;&lt;/<span class="c-tag">a-entity</span>&gt;
+&lt;/<span class="c-tag">a-scene</span>&gt;</code></pre>
+                </div>
+                <aside class="notes">
+                    Tijd voor het eerste blok: modellen inladen. Primitieven zoals een box of een sphere zijn handig om je scène op te zetten, maar om echt een strand te maken wil je echte modellen: een schelp, een vuurtoren, een strandbal. In A-Frame laad je een .glb- of .gltf-bestand eerst in bij a-assets met een id. Daarna plaats je het met het gltf-model-component en verwijs je naar dat id met een hekje. Let goed op het schaalprobleem: elk model heeft zijn eigen eenheden. Soms is een model ineens veel te groot of juist piepklein. Dat lossen we op met scale. Demonstreer live: laad een model, zet het neer, en pas scale aan tot het klopt. Herinner studenten eraan: niets extra's toevoegen. Het model moet passen bij het thema van je strand.
+                </aside>
+            </section>
+
+            <!-- 7 · Licht & schaduw (Gagné 4) -->
+            <section>
+                <span class="eyebrow">Sessie 5 · Licht &amp; schaduw</span>
+                <h2>Licht bepaalt de sfeer &mdash; niet het aantal objecten</h2>
+                <div class="grid-3 mt-m">
+                    <div class="light-card">
+                        <div class="light-viz light-viz--ambient" role="img" aria-label="Diagram: zachte, gelijkmatige verlichting over de hele scène."></div>
+                        <h3 class="lc-t">Ambient</h3>
+                        <p class="lc-b">Zachte basisverlichting overal. Voorkomt pikzwarte schaduw, maar is vlak &mdash; laag houden.</p>
+                    </div>
+                    <div class="light-card">
+                        <div class="light-viz light-viz--directional" role="img" aria-label="Diagram: een heldere lichtbron die evenwijdige stralen stuurt, zoals de zon."><span class="disc"></span></div>
+                        <h3 class="lc-t">Directional</h3>
+                        <p class="lc-b">De zon: evenwijdige stralen uit &eacute;&eacute;n richting. Geeft richting &eacute;n schaduw op je hele scène.</p>
+                    </div>
+                    <div class="light-card">
+                        <div class="light-viz light-viz--point" role="img" aria-label="Diagram: een puntbron die in alle richtingen straalt, zoals een lamp of spotlight."><span class="disc"></span></div>
+                        <h3 class="lc-t">Point</h3>
+                        <p class="lc-b">Straalt in alle richtingen, zoals een lamp. Perfect om een detail of spotlight te benadrukken.</p>
+                    </div>
+                </div>
+                <pre class="code code--sm mt-m"><code>&lt;<span class="c-tag">a-scene</span> <span class="c-attr">shadow</span>=<span class="c-str">"type: pcfsoft"</span>&gt;
+  &lt;<span class="c-tag">a-entity</span> <span class="c-attr">light</span>=<span class="c-str">"type: ambient; intensity: 0.6"</span>&gt;&lt;/<span class="c-tag">a-entity</span>&gt;
+  &lt;<span class="c-tag">a-entity</span> <span class="c-attr">light</span>=<span class="c-str">"type: directional; intensity: 0.8"</span> <span class="c-attr">position</span>=<span class="c-str">"2 4 1"</span>&gt;&lt;/<span class="c-tag">a-entity</span>&gt;
+  &lt;<span class="c-tag">a-entity</span> <span class="c-attr">light</span>=<span class="c-str">"type: point; intensity: 0.7"</span> <span class="c-attr">position</span>=<span class="c-str">"0 3 -2"</span>&gt;&lt;/<span class="c-tag">a-entity</span>&gt;
+
+  <span class="c-com">&lt;!-- schaduw: scène aan + per object cast/receive --&gt;</span>
+  &lt;<span class="c-tag">a-entity</span> <span class="c-attr">geometry</span>=<span class="c-str">"primitive: box"</span>
+            <span class="c-attr">material</span>=<span class="c-str">"color: #c2a878"</span>
+            <span class="c-attr">shadow</span>=<span class="c-str">"cast: true; receive: true"</span>&gt;&lt;/<span class="c-tag">a-entity</span>&gt;
+&lt;/<span class="c-tag">a-scene</span>&gt;</code></pre>
+                <aside class="notes">
+                    Nu het tweede blok: licht en schaduw. Veel studenten denken dat ze meer objecten nodig hebben, maar licht is de echte sfeermaker. Er zijn drie soorten. Ambient licht geeft een zachte basisverlichting overal — houd die laag, anders wordt je scène vlak. Directional licht is de zon: evenwijdige stralen die overal schaduw maken. Point licht straalt in alle richtingen, zoals een lamp of strandvuur, ideaal om een detail te benadrukken. Om schaduw te krijgen zet je op de scene het shadow-component (type: pcfsoft) én op elk object dat schaduw werpt of ontvangt shadow met cast en receive op true. Demonstreer: zet de schaduw uit en weer aan, laat de klas het verschil zien. Belangrijk: schaduwen kosten rekenkracht, dus gebruik ze gericht.
+                </aside>
+            </section>
+
+            <!-- 8 · Animaties (Gagné 4) -->
+            <section>
+                <span class="eyebrow">Sessie 5 · A-Frame animaties</span>
+                <h2>Beweging maakt je wereld levend</h2>
+                <div class="split split--code mt-m">
+                    <div>
+                        <div class="card">
+                            <h3 class="card-title">Het animation-component</h3>
+                            <p class="card-body">Je laat een eigenschap &mdash; zoals <strong>rotation</strong> of <strong>position</strong> &mdash; in de tijd veranderen.</p>
+                        </div>
+                        <div class="card card--blue mt-s">
+                            <h3 class="card-title">loop &middot; alternate &middot; easing</h3>
+                            <p class="card-body"><strong>loop</strong> herhaalt oneindig, <strong>alternate</strong> gaat heen en weer (zweven) en <strong>easing</strong> maakt beweging vloeiend.</p>
+                        </div>
+                        <p class="kicker mt-s">Meerdere animaties op &eacute;&eacute;n object? Geef ze een eigen naam: <strong>animation__float</strong>.</p>
+                    </div>
+                    <pre class="code code--sm"><code>&lt;<span class="c-tag">a-entity</span> <span class="c-attr">gltf-model</span>=<span class="c-str">"#schelp"</span>
+          <span class="c-attr">position</span>=<span class="c-str">"0 0.6 -3"</span>
+
+          <span class="c-com">&lt;!-- 1 · ronddraaien --&gt;</span>
+          <span class="c-attr">animation</span>=<span class="c-str">"property: rotation;
+                     to: 0 360 0; loop: true;
+                     dur: 8000; easing: linear"</span>
+
+          <span class="c-com">&lt;!-- 2 · heen en weer zweven --&gt;</span>
+          <span class="c-attr">animation__float</span>=<span class="c-str">"property: position;
+                     dir: alternate; to: 0 1.2 -3;
+                     loop: true; dur: 2000;
+                     easing: easeInOutSine"</span>&gt;
+&lt;/<span class="c-tag">a-entity</span>&gt;</code></pre>
+                </div>
+                <aside class="notes">
+                    Derde blok: animaties. Met het animation-component laat je een eigenschap in de tijd veranderen — bijvoorbeeld de rotatie of de positie. In het voorbeeld draait de schelp in acht seconden rond (property rotation, to 0 360 0) en zweeft hij tegelijk op en neer. Dat zweven doen we met dir: alternate — dan gaat de animatie heen en weer in plaats van te resetten. Met loop: true blijft hij oneindig doorgaan, en met easing kun je de beweging vloeiender maken (easeInOutSine laat het zachtjes versnellen en afremmen). Wil je twee animaties op één object? Geef ze een eigen naam, zoals animation en animation__float. Tip: houd bewegingen subtiel. Te veel tegelijk wordt druk en kost performance.
+                </aside>
+            </section>
+
+            <!-- 9 · Prestatie uitlokken (Gagné 6) -->
+            <section>
+                <span class="eyebrow">Solo oefening · 15 minuten</span>
+                <h2>Laat je model zweven en draaien onder een spotlight</h2>
+                <ul class="checklist mt-m">
+                    <li>Laad een <strong>.glb-model</strong> uit je assets-map en zet het op een logische plek.</li>
+                    <li>Plaats een <strong>point-light</strong> als spotlight boven je model.</li>
+                    <li>Voeg een <strong>animation</strong> toe: laat het model ronddraaien om zijn as.</li>
+                    <li>Voeg een tweede animation toe die het laat <strong>zweven</strong> (position + alternate).</li>
+                    <li>Test in de browser en stel bij tot het er &laquo;echt&raquo; uitziet.</li>
+                </ul>
+                <div class="go-banner mt-m">
+                    <span class="go-label">Aan de slag!</span>
+                    <span class="go-sub">Lukt het niet? Vraag je buur of de docent &mdash; niet blijven hangen.</span>
+                </div>
+                <aside class="notes">
+                    Nu mogen de laptops open. Je past in vijftien minuten toe wat je net hebt gezien. Laad een model, zet er een spotlight in de vorm van een point-light boven, en laat het ronddraaien én zweven met twee animaties. Loop rond en help studenten die vastlopen — vooral bij het schaalprobleem (model te groot/te klein) en bij de animatie-syntax (puntkomma's en aanhalingstekens). Dit is de opwarmer; in sessie 6 doe je hetzelfde op je eigen eindopdracht.
+                </aside>
+            </section>
+
+            <!-- 10 · Sessie 6 intro -->
+            <section>
+                <span class="eyebrow">Sessie 6 · Productie · 90 min</span>
+                <h2>Wereld verrijken: van blokken naar realisme</h2>
+                <div class="grid-3 mt-m">
+                    <div class="step">
+                        <div class="snum">10 min</div>
+                        <div class="st">Inspiratiecheck</div>
+                        <p class="sb">Hoe was het weer op het strand? Je bepaalt je lichtplan v&oacute;&oacute;r je begint.</p>
+                    </div>
+                    <div class="step">
+                        <div class="snum">70 min</div>
+                        <div class="st">Bouwen</div>
+                        <p class="sb">Modellen, belichting, animaties en sfeer &mdash; de focus ligt op <strong>Go Wild</strong>.</p>
+                    </div>
+                    <div class="step">
+                        <div class="snum">10 min</div>
+                        <div class="st">Commit &amp; push</div>
+                        <p class="sb">Je zet je voortgang vast op GitHub. De docent checkt of je op schema ligt.</p>
+                    </div>
+                </div>
+                <div class="zone zone--blue mt-m">
+                    <div class="zt">Doel van deze sessie</div>
+                    <p class="zb">Je vervangt de tijdelijke primitieven in je eindopdracht door <strong>echte modellen</strong> en zet de juiste <strong>sfeer</strong> neer met licht.</p>
+                </div>
+                <aside class="notes">
+                    Dit is sessie 6, de productiesessie. We beginnen met een korte inspiratiecheck, dan heb je zeventig minuten om echt te bouwen aan je eindopdracht, en we sluiten af met committen en pushen. Het doel: de tijdelijke primitieven vervangen door echte modellen en de sfeer neerzetten met licht. Ik loop rond om te helpen en te checken dat je op schema ligt voor de oplevering in week 4.
+                </aside>
+            </section>
+
+            <!-- 11 · Inspiratiecheck (Gagné 3/5) -->
+            <section>
+                <span class="eyebrow">Inspiratiecheck · 10 minuten</span>
+                <h2>Hoe was het weer op het strand?</h2>
+                <p class="kicker mt-s">Denk terug aan de excursie en kies je <strong>lichtplan</strong> v&oacute;&oacute;r je begint te bouwen.</p>
+                <div class="grid-3 mt-m">
+                    <div class="light-card">
+                        <div class="light-viz light-viz--directional" role="img" aria-label="Diagram: harde zon met scherpe schaduwen."><span class="disc"></span></div>
+                        <h3 class="lc-t">Zonnig</h3>
+                        <p class="lc-b">Heldere directional-zon, scherpe schaduwen, hoge intensiteit en een lichtblauwe lucht.</p>
+                    </div>
+                    <div class="light-card">
+                        <div class="light-viz light-viz--ambient" role="img" aria-label="Diagram: zachte, diffuse verlichting zonder harde schaduwen."></div>
+                        <h3 class="lc-t">Bewolkt</h3>
+                        <p class="lc-b">Zachte, diffuse ambient-verlichting, weinig schaduw, een gedempte en rustige sfeer.</p>
+                    </div>
+                    <div class="light-card">
+                        <div class="light-viz light-viz--point" role="img" aria-label="Diagram: warme, laag hangende puntbron zoals bij zonsondergang."><span class="disc"></span></div>
+                        <h3 class="lc-t">Zonsondergang</h3>
+                        <p class="lc-b">Een warme point-light laag aan de horizon, lange schaduwen en oranje-roze tinten.</p>
+                    </div>
+                </div>
+                <aside class="notes">
+                    Voordat je gaat bouwen, denk je terug aan de excursie naar het strand. Hoe was het weer? Zonnig, bewolkt, of waren jullie er bij zonsondergang? Dat bepaalt je lichtplan. Een zonnige dag vraagt om een heldere directional-zon met scherpe schaduwen. Een bewolkte dag om zachte, diffuse ambient-verlichting. Een zonsondergang om een warme puntbron laag aan de horizon. Laat studenten in één minuut hun plan opschrijven: welk licht, welke kleur, welke sfeer. Zo bouwen ze met een doel voor ogen in plaats van wat aan te klooien.
+                </aside>
+            </section>
+
+            <!-- 12 · Bouwen: Go Wild (Gagné 6) -->
+            <section>
+                <span class="eyebrow">Bouwen · 70 minuten</span>
+                <h2>Vervang je blokken en geef je wereld een ziel</h2>
+                <ul class="checklist mt-m">
+                    <li>Vervang je primitieven door <strong>eigen modellen</strong> (bijv. gedownload via Sketchfab).</li>
+                    <li>Stel de <strong>belichting</strong> in volgens je lichtplan &mdash; en zet schaduwen aan.</li>
+                    <li>Maak animaties: laat water, objecten of details <strong>bewegen</strong>.</li>
+                    <li>Verfijn de sfeer &mdash; kleur, mist of licht. Het moet voelen als een <strong>levende wereld</strong>.</li>
+                </ul>
+                <div class="go-banner mt-m">
+                    <span class="go-label">Go Wild</span>
+                    <span class="go-sub">Zonsondergang, mist, particle systems of een kettingreactie? Laat jezelf zien.</span>
+                </div>
+                <aside class="notes">
+                    Nu bouw je zeventig minuten aan je eigen eindopdracht. De opdracht is helder: haal je primitieven weg en zet er echte modellen voor in de plaats. Zet de belichting volgens je plan en denk aan schaduwen. Voeg animaties toe, en verfijn de sfeer tot het aanvoelt als een levende wereld. Voor de 'Go Wild'-beoordeling mag je groots denken: zonsondergang, mist of regen met particle systems, objecten die reageren op elkaar in een kettingreactie. Loop rond, help waar nodig, en moedig studenten aan om net dat beetje verder te gaan dan het minimum.
+                </aside>
+            </section>
+
+            <!-- 13 · Rubric-reminder (Gagné 7) -->
+            <section>
+                <span class="eyebrow">Rubric · 3D &amp; Omgeving</span>
+                <h2>Wat telt mee voor &laquo;Voldoende&raquo; &mdash; en voor &laquo;Goed&raquo;?</h2>
+                <div class="grid-2 mt-m">
+                    <div class="card">
+                        <h3 class="card-title">Voldoende &middot; de minimum-eisen</h3>
+                        <p class="card-body">Minimaal <strong>3 modellen</strong>, logisch gepositioneerd in XYZ, met basis-belichting. Plus minimaal 2 interactieve objecten en achtergrond- &amp; trigger-geluid.</p>
+                    </div>
+                    <div class="card card--blue">
+                        <h3 class="card-title">Goed &middot; Go Wild</h3>
+                        <p class="card-body"><strong>Geavanceerde belichting</strong> (schaduwen, zonsondergang, point lights), <strong>complexe modellen</strong> en bijvoorbeeld particle systems &mdash; een wereld die echt leeft.</p>
+                    </div>
+                </div>
+                <div class="zone mt-m">
+                    <div class="zt">Onthoud</div>
+                    <p class="zb">Meer objecten is niet het doel. <strong>Licht, schaduw, beweging en sfeer</strong> maken het verschil tussen &laquo;voldoende&raquo; en &laquo;goed&raquo;.</p>
+                </div>
+                <aside class="notes">
+                    Even de rubric erbij. Voor een voldoende heb je minimaal drie modellen nodig die logisch in de ruimte staan, plus basis-belichting. Denk ook aan de interactie en het geluid uit week 2 — minimaal twee objecten die reageren op input, en achtergrond- én trigger-geluid. Voor 'Goed', oftewel Go Wild, kijkt de docent naar geavanceerde belichting met schaduwen, complexere modellen en extra's zoals particle systems. De belangrijkste boodschap: het gaat niet om méér objecten, maar om licht, schaduw, beweging en sfeer. Dat is precies wat je deze week leert.
+                </aside>
+            </section>
+
+            <!-- 14 · Afsluiting (Gagné 9) -->
+            <section>
+                <span class="eyebrow">Commit &amp; push · Afsluiting</span>
+                <h2>Zet je voortgang vast &mdash; volgende week deployen we</h2>
+                <div class="flow mt-m">
+                    <span class="chip">git add</span>
+                    <span class="arrow" aria-hidden="true">&rarr;</span>
+                    <span class="chip">git commit -m &laquo;modellen + licht&raquo;</span>
+                    <span class="arrow" aria-hidden="true">&rarr;</span>
+                    <span class="chip">git push</span>
+                    <span class="arrow" aria-hidden="true">&rarr;</span>
+                    <span class="chip chip--primary">Docent-check</span>
+                </div>
+                <div class="zone zone--blue mt-m">
+                    <div class="zt">Volgende week &middot; Week 4</div>
+                    <p class="zb">Opschonen (refactoring), live zetten via <strong>GitHub Pages</strong>, een nette <strong>README</strong> schrijven en je werk presenteren in de einddemo.</p>
+                </div>
+                <div class="go-banner mt-m">
+                    <span class="go-label">Einde week 3</span>
+                    <span class="go-sub">Commit je werk &mdash; en neem je mooiste wereld mee naar de showcase.</span>
+                </div>
+                <aside class="notes">
+                    We sluiten week 3 af. Commit en push je werk met een duidelijke boodschap, bijvoorbeeld 'modellen en belichting toegevoegd'. Ik loop langs om te controleren of iedereen op schema ligt voor de oplevering. Volgende week, in week 4, gaan we opschonen, je project live zetten via GitHub Pages, een nette README schrijven en je werk presenteren in de einddemo. Zorg dat je vandaag een flinke stap hebt gezet, want volgende week ronden we af.
+                </aside>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/notes/notes.min.js"></script>
+    <script>
+        Reveal.initialize({
+            width: 1280,
+            height: 720,
+            margin: 0.06,
+            hash: true,
+            controls: true,
+            progress: true,
+            center: true,
+            slideNumber: 'c/t',
+            transition: 'slide',
+            plugins: [ RevealNotes ]
+        });
+    </script>
+</body>
+</html>

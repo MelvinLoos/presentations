@@ -1,0 +1,83 @@
+# .gitignore — educational-presentation-nl
+#
+# This repository is a documentation-only agent skill (Markdown + LICENSE).
+# There is no build step, so this file only excludes OS/editor cruft and
+# locally generated artifacts. Keep it focused on what this project needs.
+
+# ---------------------------------------------------------------------------
+# macOS (project is developed on macOS)
+# ---------------------------------------------------------------------------
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# macOS Finder thumbnails / custom icons
+Icon?
+._*
+
+# macOS Spotlight / Trash
+.Spotlight-V100
+.Trashes
+.fseventsd
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories that may appear on Apple Double file systems
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# ---------------------------------------------------------------------------
+# Editors & IDEs
+# ---------------------------------------------------------------------------
+# VS Code (primary editor). Un-ignore specific shared files if you want to
+# commit them (e.g. !.vscode/settings.json).
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# JetBrains (IntelliJ, WebStorm, etc.)
+.idea/
+*.iml
+
+# Vim / Neovim
+*.swp
+*.swo
+*.swn
+*~
+
+# Emacs
+\#*\#
+.\#*
+
+# Sublime Text
+*.sublime-workspace
+
+# ---------------------------------------------------------------------------
+# General / temporary
+# ---------------------------------------------------------------------------
+# Backup and temp files
+*.bak
+*.tmp
+*.temp
+*.orig
+*.rej
+*.log
+
+# Environment / secrets (in case any local tooling is added later)
+.env
+.env.local
+.env.*.local
+
+# ---------------------------------------------------------------------------
+# Optional: generated presentation output
+# ---------------------------------------------------------------------------
+# The skill guides the creation of .pptx decks, which are usually produced in
+# a separate working directory — not in this repo. Un-comment the lines below
+# if you ever generate decks directly inside this repository and want to keep
+# them out of version control.
+# output/
+# *.pptx
+# ~$*.pptx

@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BEROEPS2 · Week 4 — Elevator Pitches &amp; MVP kick-off | Grafisch Lyceum Rotterdam</title>
+    <meta name="description" content="Lesflow voor BEROEPS2 week 4: de laatste elevator pitches op het podium en de start van de MVP met Design Thinking en GitHub Projects.">
+
+    <!-- Reveal.js basis -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/simple.min.css" id="theme">
+
+    <!-- GLR Media Creative - typografie -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* =========================================================
+           GLR Media Creative — design system
+           Canvas #faf9fd · structuur #1b1b1f · accent lime/kobalt
+           60-30-10 · 0px hoeken · Space Grotesk + Hanken Grotesk
+           ========================================================= */
+        :root {
+            --surface: #faf9fd;
+            --surface-subtle: #f4f4f6;
+            --surface-container: #efedf1;
+            --on-surface: #1b1b1f;
+            --on-surface-variant: #424936;
+            --primary: #416900;
+            --primary-container: #76b800;
+            --lime: #a6e22e;
+            --on-lime: #102000;
+            --ultramarine: #002bff;
+            --on-ultramarine: #ffffff;
+            --error: #ba1a1a;
+            --on-error: #ffffff;
+            --border: #e5e7eb;
+        }
+
+        * { box-sizing: border-box; }
+
+        html, body { background: var(--surface); }
+
+        .reveal {
+            font-family: "Hanken Grotesk", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 26px;
+            line-height: 1.45;
+            font-weight: 400;
+            color: var(--on-surface);
+            background: var(--surface);
+        }
+
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+            font-family: "Space Grotesk", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            color: var(--on-surface);
+            text-transform: none;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.05;
+            margin: 0 0 0.35em 0;
+            text-align: left;
+        }
+
+        .reveal h1 { font-size: 72px; letter-spacing: -0.03em; }
+        .reveal h2 { font-size: 50px; }
+        .reveal h3 { font-size: 30px; font-weight: 600; }
+        .reveal h4 { font-size: 22px; font-weight: 600; }
+
+        .reveal .slides { text-align: left; }
+        .reveal .slides section { text-align: left; padding: 0 8px; }
+
+        .reveal p, .reveal li {
+            font-size: 26px;
+            line-height: 1.5;
+            text-align: left;
+            margin: 0 0 0.5em 0;
+        }
+
+        .reveal strong { color: var(--primary); font-weight: 600; }
+
+        /* Eyebrow / label */
+        .eyebrow {
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--on-surface-variant);
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 22px;
+        }
+        .eyebrow::before {
+            content: "";
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background: var(--lime);
+        }
+
+        .lead { font-size: 32px; line-height: 1.4; color: var(--on-surface-variant); max-width: 30ch; }
+
+        /* Grids */
+        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+        /* Cards */
+        .card {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-top: 6px solid var(--primary);
+            padding: 26px 28px;
+            text-align: left;
+        }
+        .card .card-title { font-family: "Space Grotesk", sans-serif; font-size: 26px; font-weight: 600; line-height: 1.15; margin: 0 0 8px 0; }
+        .card .card-body { font-size: 22px; line-height: 1.4; color: var(--on-surface-variant); margin: 0; }
+        .card--team { border-top-color: var(--ultramarine); }
+        .card--team .num-sm { color: var(--ultramarine); }
+        .card--alert { border-top-color: var(--error); }
+
+        .num {
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 84px;
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: -0.04em;
+            color: var(--primary);
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        /* Accent = lime vlak, zwarte tekst (>=13:1) */
+        .accent-block { background: var(--lime); color: var(--on-lime); padding: 4px 12px; display: inline-block; }
+        .mark { background: var(--lime); color: var(--on-lime); padding: 0.06em 0.18em; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+
+        .num-sm {
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 56px;
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: -0.03em;
+            color: var(--primary);
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        /* Zone-kaart */
+        .zone { background: var(--surface-subtle); border-left: 6px solid var(--primary); padding: 22px 24px; }
+        .zone .zt { font-family: "Space Grotesk", sans-serif; font-size: 24px; font-weight: 600; margin-bottom: 6px; }
+        .zone .zb { font-size: 20px; line-height: 1.4; color: var(--on-surface-variant); margin: 0; }
+        .zone--blue { border-left-color: var(--ultramarine); }
+
+        /* Stappen / CTA */
+        .step { background: #ffffff; border: 1px solid var(--border); padding: 26px; }
+        .step .snum { font-family: "Space Grotesk", sans-serif; font-size: 40px; font-weight: 700; color: var(--primary); line-height: 1; margin-bottom: 10px; }
+        .step .st { font-family: "Space Grotesk", sans-serif; font-size: 26px; font-weight: 600; margin-bottom: 6px; }
+        .step .sb { font-size: 20px; color: var(--on-surface-variant); line-height: 1.4; margin: 0; }
+
+        .go-banner { background: var(--lime); color: var(--on-lime); padding: 22px 30px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+        .go-banner .go-label { font-family: "Space Grotesk", sans-serif; font-weight: 700; font-size: 34px; letter-spacing: -0.01em; }
+        .go-banner .go-sub { font-size: 20px; }
+
+        .flow { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+        .chip { background: var(--surface-container); border: 1px solid var(--border); padding: 10px 18px; font-family: "Space Grotesk", sans-serif; font-size: 20px; font-weight: 600; }
+        .chip--primary { background: var(--lime); color: var(--on-lime); border-color: var(--lime); }
+        .arrow { font-size: 26px; color: var(--primary); font-weight: 700; }
+
+        .kicker { font-size: 20px; color: var(--on-surface-variant); }
+        .muted { color: var(--on-surface-variant); }
+        .mt-s { margin-top: 18px; }
+        .mt-m { margin-top: 34px; }
+
+        /* Twee-koloms: tekst + beeld */
+        .split { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; align-items: start; }
+        /* Beeld-dominant: grotere afbeelding, compactere side-tekst */
+        .split--media { grid-template-columns: 0.72fr 1.28fr; gap: 30px; align-items: center; }
+        .split--media .shot img { width: auto; max-width: 100%; max-height: 430px; height: auto; margin: 0 auto; }
+        .split--media .card-title { font-size: 22px; }
+        .split--media .card-body { font-size: 18px; }
+        .split--media .kicker { font-size: 18px; }
+        .split--media .chip { font-size: 17px; padding: 8px 14px; }
+
+        /* Screenshot / diagram in huisstijl */
+        .shot { background: #ffffff; border: 1px solid var(--border); border-top: 6px solid var(--primary); padding: 0; overflow: hidden; margin: 0; }
+        .shot--blue { border-top-color: var(--ultramarine); }
+        .shot img { display: block; width: 100%; height: auto; cursor: zoom-in; }
+        .shot figcaption { font-family: "Space Grotesk", sans-serif; font-size: 17px; font-weight: 600; color: var(--on-surface-variant); padding: 12px 16px; border-top: 1px solid var(--border); }
+        .credit { font-size: 13px; line-height: 1.35; color: var(--on-surface-variant); margin: 8px 2px 0; }
+        .credit a { color: var(--on-surface-variant); text-decoration: underline; }
+
+        /* Top / Tip feedbackkaarten */
+        .tt { background: #ffffff; border: 1px solid var(--border); padding: 24px 26px; }
+        .tt--top { border-top: 6px solid var(--primary); }
+        .tt--tip { border-top: 6px solid var(--ultramarine); }
+        .tt .tt-label { font-family: "Space Grotesk", sans-serif; font-size: 22px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+        .tt--top .tt-label { color: var(--primary); }
+        .tt--tip .tt-label { color: var(--ultramarine); }
+        .tt .tt-q { font-size: 22px; line-height: 1.4; margin: 10px 0 0; }
+
+        /* Mock-projectbord: "spot de fouten" (nagemaakt, geen screenshot) */
+        .bb { margin-top: 16px; background: var(--surface-subtle); border: 1px solid var(--border); padding: 12px; }
+        .bb-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 2px 6px 10px; }
+        .bb-name { font-family: "Space Grotesk", sans-serif; font-size: 20px; font-weight: 600; }
+        .bb-tabs { display: flex; gap: 6px; }
+        .bb-tabs span { font-family: "Space Grotesk", sans-serif; font-size: 15px; font-weight: 600; color: var(--on-surface-variant); background: var(--surface-container); padding: 4px 12px; }
+        .bb-tabs span.on { background: var(--primary); color: #ffffff; }
+        .bb-cols { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; align-items: start; }
+        .bb-col { background: #e9e7ee; padding: 10px; }
+        .bb-head { display: flex; align-items: center; justify-content: space-between; font-family: "Space Grotesk", sans-serif; font-size: 15px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--on-surface-variant); padding: 2px 4px 10px; }
+        .bb-count { background: #d9d5e3; font-size: 13px; padding: 0 7px; }
+        .bb-card { background: #ffffff; border: 1px solid #d7d3e2; padding: 8px 10px; margin-bottom: 8px; }
+        .bb-col > .bb-card:last-child { margin-bottom: 0; }
+        .bb-t { font-size: 16px; line-height: 1.25; font-weight: 600; color: var(--on-surface); }
+        .bb-meta { display: flex; align-items: center; gap: 7px; margin-top: 7px; }
+        .bb-lab { font-family: "Space Grotesk", sans-serif; font-size: 12px; font-weight: 600; padding: 2px 8px; background: #ffe1e1; color: #8a1010; }
+        .bb-av { width: 20px; height: 20px; border-radius: 50%; background: var(--ultramarine); color: #ffffff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+        .bb-av--b { background: var(--primary); }
+
+        /* Progress + controls in huisstijl */
+        .reveal .progress { color: var(--primary); height: 5px; }
+        .reveal .controls { color: var(--primary); }
+
+        /* Focus zichtbaar voor toetsenbordgebruik */
+        .reveal a:focus, .reveal button:focus { outline: 3px solid var(--ultramarine); outline-offset: 2px; }
+
+        /* Lightbox: klik op een afbeelding voor een scherpe fullscreen-weergave */
+        .lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background: rgba(18, 18, 20, 0.94);
+            padding: 3vh 3vw;
+            box-sizing: border-box;
+        }
+        .lightbox.open { display: flex; align-items: center; justify-content: center; }
+        .lightbox__fig { display: flex; flex-direction: column; align-items: center; justify-content: center; max-width: 100%; max-height: 100%; margin: 0; }
+        .lightbox__img { max-width: 94vw; max-height: 80vh; width: auto; height: auto; background: #ffffff; box-shadow: 0 16px 48px rgba(0,0,0,0.55); }
+        .lightbox__cap { color: #faf9fd; font-family: "Space Grotesk", sans-serif; font-size: 20px; font-weight: 600; margin-top: 16px; text-align: center; max-width: 90vw; }
+        .lightbox__close {
+            position: fixed; top: 20px; right: 24px;
+            font-family: "Space Grotesk", sans-serif; font-size: 22px; font-weight: 700;
+            background: var(--lime); color: var(--on-lime); border: 0; cursor: pointer;
+            padding: 8px 18px;
+        }
+        .lightbox__close:focus { outline: 3px solid #ffffff; outline-offset: 2px; }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- 1 · Aandacht: opening van de les -->
+            <section>
+                <span class="eyebrow">Beroeps2 · Week 4 · MVP kick-off</span>
+                <h1>Stop de ontkoking.</h1>
+                <h2><span class="mark">De laatste pitches &mdash; en dan bouwen we de MVP.</span></h2>
+                <p class="lead mt-m">Vandaag zetten de resterende teams hun idee op het "podium" en starten we met de <strong>MVP</strong>: de kleinste versie die jullie idee al bewijst.</p>
+                <aside class="notes">
+                    Welkom bij BEROEPS2, week 4. We zitten op de helft van de periode. Vandaag twee dingen: eerst krijgen de teams die nog niet aan de beurt waren hun elevator pitch, daarna beginnen we met de MVP — de minimale versie van jullie product die het idee al bewijst. Ga direct bij je team zitten, we starten meteen.
+                </aside>
+            </section>
+
+            <!-- 2 · Status: waar staan we -->
+            <section>
+                <span class="eyebrow">Status · Waar staan we?</span>
+                <h2>Het concept staat &mdash; nu moet de MVP het bewijzen</h2>
+                <div class="flow mt-m">
+                    <span class="chip">Onderzoek &amp; concept</span>
+                    <span class="arrow" aria-hidden="true">&rarr;</span>
+                    <span class="chip chip--primary">Elevator pitch</span>
+                    <span class="arrow" aria-hidden="true">&rarr;</span>
+                    <span class="chip">MVP bouwen</span>
+                    <span class="arrow" aria-hidden="true">&rarr;</span>
+                    <span class="chip">Testen met gebruikers</span>
+                </div>
+                <div class="grid-2 mt-m">
+                    <div class="zone">
+                        <div class="zt">Afgerond</div>
+                        <p class="zb">Het idee is onderzocht, gekozen en aangescherpt met <strong>Design Thinking</strong>. De kern van het probleem is helder.</p>
+                    </div>
+                    <div class="zone zone--blue">
+                        <div class="zt">Vandaag &amp; hierna</div>
+                        <p class="zb">De pitches afmaken en de <strong>MVP</strong> opknippen in kleine taken in <strong>GitHub Projects</strong>, zodat iedereen weet wat te bouwen.</p>
+                    </div>
+                </div>
+                <aside class="notes">
+                    Even de status. We zijn op de helft van de periode. Het onderzoek en het concept staan: jullie weten welk probleem jullie oplossen en waarom. Vandaag maken we de pitches af voor de laatste teams, en zetten we de stap naar de MVP. Een MVP is niet het eindproduct — het is de kleinste versie die bewijst dat je idee werkt. Daarvoor hebben we straks een strak projectbord nodig.
+                </aside>
+            </section>
+
+            <!-- 3 · De aanpak: Design Thinking -->
+            <section>
+                <span class="eyebrow">De aanpak · Design Thinking</span>
+                <h2>Design Thinking geeft de route:</h2>
+                <h3>van probleem naar prototype</h3>
+                <div class="split split--media mt-s">
+                    <div>
+                        <p class="kicker">Je doorloopt vijf stappen &mdash; en je mag altijd terug.</p>
+                    </div>
+                    <figure class="shot">
+                        <img src="assets/design-thinking-proces.png" alt="Diagram van het Design Thinking-proces: vijf stappen (Empathize, Define, Ideate, Prototype, Test) met uitleg, verbonden in een iteratieve cyclus.">
+                    </figure>
+                </div>
+                <p class="credit">Bron: &ldquo;Design thinking&rdquo; &mdash; MrJanzen1984 · <a href="https://commons.wikimedia.org/wiki/File:Design_thinking.png">Wikimedia Commons</a> · CC BY-SA 4.0</p>
+                <aside class="notes">
+                    Design Thinking is onze routekaart. Vijf stappen: Empathize (begrijp de gebruiker), Define (formuleer het echte probleem), Ideate (bedenk oplossingen), Prototype (bouw een eerste versie) en Test (laat gebruikers het proberen). Belangrijk: het is geen rechte lijn maar een cyclus — de test leert je iets en dan ga je terug. Waar staan jullie? Onderzoek en ideeën zijn klaar; vandaag beginnen jullie aan Prototype: de MVP. Daarna volgt Test.
+                </aside>
+            </section>
+
+            <!-- 4 · Opwarmer: spot de fouten op een slecht projectbord -->
+            <section>
+                <span class="eyebrow">Opwarmer · Spot de fouten</span>
+                <h2>Hoeveel fouten zie jij op dit bord?</h2>
+                <p class="kicker">Bekijk het bord met je team en noem zoveel fouten als je kunt &mdash; let op de titels, de labels en wie wat doet.</p>
+                <div class="bb">
+                    <div class="bb-bar">
+                        <span class="bb-name">Sprint 1 &mdash; Team Ontkoking</span>
+                        <span class="bb-tabs"><span class="on">Board</span><span>Table</span><span>Roadmap</span></span>
+                    </div>
+                    <div class="bb-cols">
+                        <div class="bb-col">
+                            <div class="bb-head"><span>To do</span><span class="bb-count">6</span></div>
+                            <div class="bb-card"><span class="bb-t">dingen</span></div>
+                            <div class="bb-card"><span class="bb-t">website</span></div>
+                            <div class="bb-card"><span class="bb-t">website maken</span></div>
+                            <div class="bb-card"><span class="bb-t">Hele website bouwen</span></div>
+                            <div class="bb-card"><span class="bb-t">koffie halen</span></div>
+                            <div class="bb-card"><span class="bb-t">idee&euml;n</span></div>
+                        </div>
+                        <div class="bb-col">
+                            <div class="bb-head"><span>In progress</span><span class="bb-count">5</span></div>
+                            <div class="bb-card"><span class="bb-t">login</span><span class="bb-meta"><span class="bb-lab">urgent</span><span class="bb-av">S</span></span></div>
+                            <div class="bb-card"><span class="bb-t">login fixen</span><span class="bb-meta"><span class="bb-lab">urgent</span><span class="bb-av">S</span></span></div>
+                            <div class="bb-card"><span class="bb-t">database + api + design</span><span class="bb-meta"><span class="bb-lab">urgent</span><span class="bb-av bb-av--b">Y</span></span></div>
+                            <div class="bb-card"><span class="bb-t">Maak alles af</span></div>
+                            <div class="bb-card"><span class="bb-t">?</span></div>
+                        </div>
+                        <div class="bb-col">
+                            <div class="bb-head"><span>In review</span><span class="bb-count">1</span></div>
+                            <div class="bb-card"><span class="bb-t">design</span></div>
+                        </div>
+                        <div class="bb-col">
+                            <div class="bb-head"><span>Done</span><span class="bb-count">2</span></div>
+                            <div class="bb-card"><span class="bb-t">website live</span><span class="bb-meta"><span class="bb-lab">urgent</span><span class="bb-av">S</span></span></div>
+                            <div class="bb-card"><span class="bb-t">presentatie</span><span class="bb-meta"><span class="bb-av bb-av--b">Y</span></span></div>
+                        </div>
+                    </div>
+                </div>
+                <aside class="notes">
+                    <style>
+                        .bbn h4 { font-size: 17px; text-transform: uppercase; letter-spacing: 0.05em; margin: 12px 0 6px; color: #555; }
+                        .bbn h4:first-child { margin-top: 0; }
+                        .bbn p { margin: 0 0 8px; }
+                        .bbn ol { margin: 0; padding-left: 26px; }
+                        .bbn li { margin: 0 0 6px; line-height: 1.45; }
+                        .bbn strong { color: #111; }
+                    </style>
+                    <div class="bbn">
+                        <h4>Werkvorm &middot; &plusmn;3 minuten</h4>
+                        <p>Laat elk team naar het bord kijken en fouten opsommen. Vraag: &ldquo;Wat valt je op? Wat zou jij hier anders doen?&rdquo;</p>
+                        <h4>Antwoordsleutel &middot; 12 bewuste fouten</h4>
+                        <ol>
+                            <li>Vage titels: &ldquo;dingen&rdquo;, &ldquo;?&rdquo;, &ldquo;website&rdquo; &mdash; je weet niet wat er moet gebeuren.</li>
+                            <li>Dubbele taken: &ldquo;website&rdquo; &eacute;n &ldquo;website maken&rdquo;; &ldquo;login&rdquo; &eacute;n &ldquo;login fixen&rdquo;.</li>
+                            <li>Geen echte taken: &ldquo;koffie halen&rdquo;, &ldquo;idee&euml;n&rdquo;.</li>
+                            <li>Te grote taken (niet atomic): &ldquo;Hele website bouwen&rdquo;, &ldquo;Maak alles af&rdquo;, &ldquo;database + api + design&rdquo;.</li>
+                            <li>Geen type-labels (Epic / Task / Bug), dus je ziet de grootte niet.</li>
+                            <li>Alles is &ldquo;urgent&rdquo; &mdash; als alles urgent is, is niets urgent.</li>
+                            <li>Bijna niemand is toegewezen, en &eacute;&eacute;n persoon (S) doet drie taken: geen eigenaarschap.</li>
+                            <li>Veel te veel tegelijk in &ldquo;In progress&rdquo; (WIP te hoog), dus niets wordt afgerond.</li>
+                            <li>Geen acceptatiecriteria: wanneer is een taak klaar?</li>
+                            <li>Geen datums of deadlines.</li>
+                            <li>&ldquo;In review&rdquo; wordt niet gebruikt en &ldquo;Done&rdquo; bevat werk dat niet af of niet gecontroleerd is.</li>
+                            <li>Geen sub-issues en geen koppeling aan een Epic.</li>
+                        </ol>
+                        <h4>Brug naar de volgende slide</h4>
+                        <p>Precies daarom spreken we zo &eacute;&eacute;n beheerd bord en atomic issues af.</p>
+                    </div>
+                </aside>
+            </section>
+
+            <!-- 5 · Werkwijze: GitHub Projects, het knelpunt -->
+            <section>
+                <span class="eyebrow">Werkwijze · GitHub Projects</span>
+                <h2>Zonder één beheerd bord wordt je project onbestuurbaar</h2>
+                <div class="split split--media mt-m">
+                    <div>
+                        <div class="card card--alert">
+                            <h3 class="card-title">Het knelpunt</h3>
+                            <p class="card-body">Taken leven in iemands hoofd of in losse chatberichten. Niemand ziet wie waaraan werkt &mdash; en werk blijft liggen.</p>
+                        </div>
+                        <div class="card mt-s">
+                            <h3 class="card-title">De afspraak</h3>
+                            <p class="card-body">Alles wat gebouwd wordt, staat als <strong>issue</strong> op &eacute;&eacute;n bord. Niets gaat buiten het bord om.</p>
+                        </div>
+                    </div>
+                    <figure class="shot shot--blue">
+                        <img src="assets/github-projects-board.png" alt="Screenshot van een GitHub Projects-boardweergave met kolommen Triage, Not Started, Planning en Building, gevuld met issue-kaarten met labels en toegewezen teamleden.">
+                        <figcaption>GitHub Projects &mdash; boardweergave met kolommen en kaarten.</figcaption>
+                    </figure>
+                </div>
+                <p class="credit">Bron: &ldquo;example-board&rdquo; &mdash; GitHub (<a href="https://github.com/github/docs">github.com/github/docs</a>) · CC BY 4.0</p>
+                <aside class="notes">
+                    Nu de werkwijze. Als taken alleen in jullie hoofd of in chatberichten leven, weet niemand wie waaraan werkt en blijft werk liggen. Dat noemen we cowboy coding. De afspraak is simpel: alles wat gebouwd wordt, staat als issue op één gedeeld bord in GitHub Projects — met kolommen als Backlog, In progress en Done. Wat niet op het bord staat, gebeurt niet. Laat de boardweergave zien: elke kaart is één issue met labels en een toegewezen teamlid.
+                </aside>
+            </section>
+
+            <!-- 6 · GitHub Issues: atomic -->
+            <section>
+                <span class="eyebrow">GitHub Issues · Atomic</span>
+                <h2>Grote brokken maak je klein: &eacute;&eacute;n issue = &eacute;&eacute;n taak</h2>
+                <div class="split split--media mt-m">
+                    <div>
+                        <div class="flow" style="flex-direction:column; align-items:flex-start; gap:8px;">
+                            <span class="chip chip--primary">Epic &mdash; het grote idee</span>
+                            <span class="arrow" aria-hidden="true">&darr;</span>
+                            <span class="chip">User story &mdash; wat de gebruiker wil</span>
+                            <span class="arrow" aria-hidden="true">&darr;</span>
+                            <span class="chip">Taak &mdash; max. &eacute;&eacute;n dag werk</span>
+                        </div>
+                        <p class="kicker mt-s">Klein werk is sneller af, makkelijker te plannen en eerlijk te verdelen.</p>
+                    </div>
+                    <figure class="shot shot--blue">
+                        <img src="assets/github-projects-table.png" alt="Screenshot van een GitHub Projects-tabel met per rij het itemtype (Epic, Task of Bug), de titel, een kolom met sub-issue-voortgang en de status.">
+                        <figcaption>Table-weergave &mdash; type, titel en sub-issue-voortgang per item.</figcaption>
+                    </figure>
+                </div>
+                <p class="credit">Bron: &ldquo;example-table&rdquo; &mdash; GitHub (<a href="https://github.com/github/docs">github.com/github/docs</a>) · CC BY 4.0</p>
+                <aside class="notes">
+                    Een MVP is te groot om in één keer te bouwen, dus knippen we het op. Dat noemen we atomic issues: elk issue is één heldere, afgeronde taak van maximaal één dag werk. De structuur is: eerst een Epic (het grote idee), dan user stories (wat wil de gebruiker?), en die splits je in losse taken. In de tabel zie je per item het type — Epic, Task of Bug — én de sub-issue-voortgang, zodat je in één oogopslag ziet hoe ver een groter geheel is. Regel voor vandaag: als je een taak niet binnen een dag afkrijgt, is hij te groot — knip hem nog een keer op.
+                </aside>
+            </section>
+
+            <!-- 7 · Kijkersopdracht: Top / Tip -->
+            <section>
+                <span class="eyebrow">Kijkersopdracht · Top / Tip</span>
+                <h2>Als publiek leer je minstens zoveel als de pitcher</h2>
+                <p class="kicker mt-s">Bij elke pitch noteer je twee dingen: &eacute;&eacute;n <strong>Top</strong> en &eacute;&eacute;n <strong>Tip</strong>.</p>
+                <div class="grid-2 mt-m">
+                    <div class="tt tt--top">
+                        <span class="tt-label">Top</span>
+                        <p class="tt-q">Wat werkte goed? Noem iets concreets dat je overtuigde.</p>
+                    </div>
+                    <div class="tt tt--tip">
+                        <span class="tt-label">Tip</span>
+                        <p class="tt-q">Wat kan beter? Geef een concrete, opbouwende volgende stap.</p>
+                    </div>
+                </div>
+                <div class="zone mt-m">
+                    <div class="zt">Spelregels</div>
+                    <p class="zb">Concreet en opbouwend, en over de pitch &mdash; niet over de persoon. Schrijf je Top/Tip op; we bespreken ze na.</p>
+                </div>
+                <aside class="notes">
+                    Terwijl de teams pitchen, ben jij geen passief publiek maar een scherpe kijker. Bij elke pitch schrijf je één Top en één Tip op. Een Top is iets concreets dat goed werkte: een sterke opening, een helder verhaal, een overtuigend argument. Een Tip is een concrete verbetering: wat zou de pitch nog sterker maken? Houd het opbouwend en gericht op de pitch, niet op de persoon. Na de ronde bespreken we een paar Top/Tips klassikaal. Slimme zet: leen goede ideeën voor je eigen pitch.
+                </aside>
+            </section>
+
+            <!-- 8 · Showtime: wie pakt het podium? -->
+            <section>
+                <span class="eyebrow">Showtime · Elevator pitch</span>
+                <h1>Wie pakt het podium?</h1>
+                <p class="lead mt-m">Dertig seconden. &Eacute;&eacute;n kans. Vertel waarom jouw idee ertoe doet &mdash; en waarom wij erin moeten investeren.</p>
+                <div class="go-banner mt-m">
+                    <span class="go-label">Podium!</span>
+                    <span class="go-sub">Top/Tip in de aanslag &mdash; jij bent nu het publiek.</span>
+                </div>
+                <aside class="notes">
+                    En nu is het jullie beurt: wie pakt het podium? Je pitch is kort en krachtig — ongeveer een halve tot een hele minuut. Vertel het probleem, je oplossing en waarom die het waard is. De rest van de klas is het publiek en schrijft een Top en een Tip op. Ik houd de tijd in de gaten. Wie durft er als eerste? Succes!
+                </aside>
+            </section>
+        </div>
+    </div>
+
+    <!-- Lightbox voor vergrote afbeeldingen -->
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Vergrote afbeelding">
+        <button class="lightbox__close" id="lightbox-close" type="button" aria-label="Sluiten">Sluiten &times;</button>
+        <figure class="lightbox__fig">
+            <img class="lightbox__img" id="lightbox-img" src="" alt="">
+            <figcaption class="lightbox__cap" id="lightbox-cap"></figcaption>
+        </figure>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/notes/notes.min.js"></script>
+    <script>
+        Reveal.initialize({
+            width: 1280,
+            height: 720,
+            margin: 0.06,
+            hash: true,
+            controls: true,
+            progress: true,
+            center: true,
+            slideNumber: 'c/t',
+            transition: 'slide',
+            plugins: [ RevealNotes ]
+        });
+
+        // Lightbox: klik (of Enter) op een slide-afbeelding voor een scherpe, grote weergave
+        (function () {
+            var lightbox = document.getElementById('lightbox');
+            var lightboxImg = document.getElementById('lightbox-img');
+            var lightboxCap = document.getElementById('lightbox-cap');
+            var closeBtn = document.getElementById('lightbox-close');
+            if (!lightbox || !lightboxImg) return;
+
+            function openLightbox(img) {
+                lightboxImg.src = img.currentSrc || img.src;
+                lightboxImg.alt = img.alt || '';
+                var fig = img.closest('figure');
+                var cap = fig ? fig.querySelector('figcaption') : null;
+                lightboxCap.textContent = cap ? cap.textContent : '';
+                lightbox.classList.add('open');
+                if (window.Reveal) { Reveal.configure({ keyboard: false }); }
+                closeBtn.focus();
+            }
+            function closeLightbox() {
+                lightbox.classList.remove('open');
+                lightboxImg.src = '';
+                if (window.Reveal) { Reveal.configure({ keyboard: true }); }
+            }
+
+            document.querySelectorAll('.shot img').forEach(function (img) {
+                img.setAttribute('role', 'button');
+                img.setAttribute('tabindex', '0');
+                img.addEventListener('click', function () { openLightbox(img); });
+                img.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter') { e.preventDefault(); openLightbox(img); }
+                });
+            });
+
+            closeBtn.addEventListener('click', closeLightbox);
+            lightbox.addEventListener('click', function (e) { if (e.target === lightbox) closeLightbox(); });
+            document.addEventListener('keydown', function (e) {
+                if (lightbox.classList.contains('open') && e.key === 'Escape') {
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    closeLightbox();
+                }
+            }, true);
+        })();
+    </script>
+</body>
+</html>

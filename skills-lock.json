@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "educational-presentation-nl": {
+      "source": "loos-glr/educational-presentation-nl",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "08b01273e7d250e9d9c4f8b8592c7a0145e15dcbebd174f699ef6fdbcc6fa3af"
+    }
+  }
+}
