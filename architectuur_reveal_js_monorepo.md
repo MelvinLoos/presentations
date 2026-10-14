@@ -26,7 +26,7 @@ reveal-presentations/
 ├── .github/
 │   └── workflows/
 │       └── deploy.yml              # CI/CD pipeline voor build, PDF-generatie en deployment
-├── .skills/                        # Agent Skills en AI-gedragsprofielen
+├── .agents/skills/                 # Agent Skills en AI-gedragsprofielen
 │   └── reveal-slide-builder/
 │       ├── SKILL.md                # Instructieset voor structuur, styling en didactiek
 │       └── templates/              # Referentie-templates voor Markdown & slides
@@ -93,7 +93,7 @@ Thumbs.db
 
 ## 4. Agent Skills: Structuur- & Stylingspecificatie
 
-Om te voorkomen dat handmatige styling of inconsistente opmaak ontstaat bij het converteren van ruw lesmateriaal, wordt een specifieke **Agent Skill** vastgelegd in `.skills/reveal-slide-builder/SKILL.md`. Deze skill definieert de interactie tussen de agent, het bronmateriaal uit `input/` en het gegenereerde `slides.md`.
+Om te voorkomen dat handmatige styling of inconsistente opmaak ontstaat bij het converteren van ruw lesmateriaal, wordt een specifieke **Agent Skill** vastgelegd in `.agents/skills/reveal-slide-builder/SKILL.md`. Deze skill definieert de interactie tussen de agent, het bronmateriaal uit `input/` en het gegenereerde `slides.md`.
 
 ### 4.1 Taken en Verantwoordelijkheden van de Skill
 De agent skill dwingt de volgende regels af tijdens de generatie:
@@ -330,7 +330,7 @@ MBO-studenten hebben baat bij gestructureerde, voorspelbare presentaties:
 * **Geen 'Wall of Text':** Gebruik codefragmenten met syntax highlighting en loop er interactief doorheen met Reveal.js *line highlighting* (`<pre><code data-line-numbers="2|4-6">`).
 * **Taxonomie van Bloom:** Begin altijd met duidelijke, meetbare lesdoelen (Onthouden $\rightarrow$ Begrijpen $\rightarrow$ Toepassen) en sluit af met een concrete verwerkingsopdracht.
 
-### 7.2 Toegankelijkheid (WCAG 2.2)
+### 7.2 Toegankelijkheid (WCAG 2.1 AA)
 * **Contrast:** Zorg voor een minimale contrastverhouding van 4.5:1 tussen tekst en achtergrond (zeker bij projectie op beamers en schermen in leslokalen).
 * **Typografie:** Gebruik schreefloze lettertypen met een minimale korpsgrootte van 24px op 1080p presentaties.
 * **Toetsenbordnavigatie:** Reveal.js ondersteunt standaard pijltoetsen en spatiebalk; test of custom elementen en embeds de focus niet vangen (geen keyboard traps).
@@ -353,4 +353,4 @@ MBO-studenten hebben baat bij gestructureerde, voorspelbare presentaties:
 * **DeckTape Repository:** Antonin Stefanutti. *DeckTape: High-quality PDF exporter for HTML5 presentations*. https://github.com/astefanutti/decktape
 * **GitHub Pages & Actions:** GitHub Docs. *Continuous integration and deployment for GitHub Pages*. https://docs.github.com/en/pages
 * **Sweller, J. (1988):** *Cognitive Load During Problem Solving: Effects on Learning*. Cognitive Science, 12(2), 257-285.
-* **W3C (2023):** *Web Content Accessibility Guidelines (WCAG) 2.2*. World Wide Web Consortium. https://www.w3.org/TR/WCAG22/
+* **W3C:** *Web Content Accessibility Guidelines (WCAG) 2.1*. World Wide Web Consortium. https://www.w3.org/TR/WCAG21/

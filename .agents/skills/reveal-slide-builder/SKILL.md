@@ -80,6 +80,23 @@ Orden de inhoud volgens de Taxonomie van Bloom
 Gagné's instructiegebeurtenissen. Voor de onderbouwing en de volledige
 checklists: zie de skill **`educational-presentation-nl`**.
 
+## Verhouding tot `educational-presentation-nl`
+
+Deze repository gebruikt twee complementaire skills:
+
+- **`educational-presentation-nl`** — het didactische en visuele ontwerp:
+  Cognitive Load Theory, Mayers principes, Gagné's 9 instructiegebeurtenissen,
+  Bloom, Peer Instruction, beeldgebruik en toegankelijkheid (WCAG 2.1 AA).
+- **`reveal-slide-builder`** (deze skill) — de *technische* vertaling naar
+  reveal.js: markdown-syntax (`---`/`--`), YAML-frontmatter, line-highlighting,
+  fragments en de GLR-huisstijl-utilities.
+
+**Precedentie bij twijfel:** didactische en toegankelijkheidskeuzes volgen
+`educational-presentation-nl`; de reveal.js-syntax, bestandsstructuur en styling
+volgen deze skill. De vuistregels "elke 5 slides een actieve opdracht" (deze
+skill) en "elke 10–15 minuten een Peer Instruction-checkpoint"
+(`educational-presentation-nl`) zijn gelijkwaardig — pas ze samen toe.
+
 ## GLR-huisstijl-utilities
 
 Pas deze klassen toe in de markdown-annotaties in plaats van losse CSS:
@@ -114,11 +131,12 @@ generiek is, in `shared/css/glr-theme.css`.
   student eerst moet nadenken; gebruik fragmenten per item.
 - Uitzondering: keuzemomenten (bijv. een palet) mogen in één keer zichtbaar zijn.
 
-## Accessibility (WCAG 2.2)
+## Accessibility (WCAG 2.1 AA)
 
 - Contrast ≥ 4.5:1; gebruik `.highlight` (lime op donker) en `--green-dk`
   (groen op licht) zoals bedoeld.
-- Broodtekst ≥ 24px op 1080p.
+- Broodtekst ≥ 24px op 1080p. Dit is de PowerPoint-eenheid ≥ 24pt (≈ 32px) uit
+  `educational-presentation-nl`, vertaald naar de reveal.js-canvas van 1080p.
 - Beschrijvende `alt`-tekst voor inhoudelijke beelden; decoratieve beelden
   krijgen `alt=""` + `aria-hidden="true"`.
 - Geen keyboard traps in embeds/custom componenten.
@@ -143,6 +161,6 @@ generiek is, in `shared/css/glr-theme.css`.
 - [ ] Afsluitende slide met samenvatting + vervolgstappen.
 - [ ] Codeblokken > 4 regels hebben een taaldeclaratie én line-highlighting.
 - [ ] Gebruik van GLR-utilities in plaats van ad-hoc HTML/CSS.
-- [ ] Contrast en tekstgrootte voldoen aan WCAG 2.2.
+- [ ] Contrast en tekstgrootte voldoen aan WCAG 2.1 AA.
 - [ ] Alle inhoudelijke beelden hebben beschrijvende `alt`-tekst.
 - [ ] Sprekersnotities (`<aside class="notes">`) toegevoegd waar zinvol.

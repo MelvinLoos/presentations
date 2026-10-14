@@ -13,8 +13,7 @@ Zie voor de volledige architectuur en richtlijnen:
 ```text
 .
 ├── .github/workflows/deploy.yml    # CI/CD: build, PDF-export en deploy naar GitHub Pages
-├── .skills/reveal-slide-builder/   # Agent Skill voor structuur, styling en didactiek
-├── .agents/skills/                 # Agentskills-runtime (o.a. educational-presentation-nl)
+├── .agents/skills/                 # Agent Skills (educational-presentation-nl + reveal-slide-builder)
 ├── input/                          # Lokale staging voor brondocumenten (niet in Git)
 ├── presentations/                  # De presentaties, per cohort/jaar/vak
 ├── shared/                         # Gedeelde assets
@@ -52,7 +51,7 @@ Open daarna een presentatie via de server, bijvoorbeeld
 2. Laat de Agent Skill **`reveal-slide-builder`** het bronmateriaal omzetten naar
    een `slides.md` die voldoet aan de syntax- en didactiekregels.
 3. Kopieer de templates uit
-   [`.skills/reveal-slide-builder/templates/`](.skills/reveal-slide-builder/templates)
+   [`.agents/skills/reveal-slide-builder/templates/`](.agents/skills/reveal-slide-builder/templates)
    naar een nieuwe map onder
    `presentations/<cohort>/<jaar>/<vak>/<presentatie>/`.
 4. Werk de YAML-frontmatter bij (titel, cohort, leerjaar, periode, tags) en
@@ -89,11 +88,10 @@ genereren en het geheel publiceren naar **GitHub Pages**. Op de portaalpagina
 - **Didactiek**: leerdoelen ("Aan het einde van deze les kun je…"), actieve
   verwerkingsopdrachten en een afsluitende samenvatting. Zie de skill
   `reveal-slide-builder` en `educational-presentation-nl`.
-- **Toegankelijkheid**: WCAG 2.2 AA — contrast ≥ 4.5:1, broodtekst ≥ 24px,
+- **Toegankelijkheid**: WCAG 2.1 AA — contrast ≥ 4.5:1, broodtekst ≥ 24px,
   beschrijvende `alt`-tekst.
 
-> **Let op — skillslocatie.** De architectuurspecificatie schrijft `.skills/`
-> voor; dit bestand volgt die afspraak. De actieve agentskills-runtime van deze
-> omgeving leest echter `.agents/skills/` (zie `skills-lock.json`). Wil je de
-> `reveal-slide-builder`-skill door de agent laten oppikken, verplaats of symlink
-> hem dan naar `.agents/skills/reveal-slide-builder/`.
+> **Skills-locatie.** Skills staan in `.agents/skills/` — de locatie die de
+> agentskills-runtime leest (zie `skills-lock.json`). Zowel
+> `educational-presentation-nl` (didactiek) als `reveal-slide-builder`
+> (reveal.js-syntax en -structuur) staan hier.
