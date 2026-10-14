@@ -72,6 +72,7 @@ Open daarna een presentatie via de server, bijvoorbeeld
 | `npm run build` | `vendor` + `build:index` |
 | `npm run export:pdf` | Exporteert elke presentatie naar `presentation.pdf` via DeckTape (Docker) |
 | `npm run export:pdf -- --local` | Idem, maar met een lokaal geïnstalleerde `decktape` |
+| `npm run export:pdf:cached` | CI-variant met incrementele caching: rendert alleen gewijzigde presentaties, de rest komt uit de GitHub Actions-cache. `-- --dry-run` toont de cache-status zonder te bouwen |
 | `npm run serve` | Start een statische server in de repo-root |
 
 ## Deployment (CI/CD)
@@ -83,6 +84,27 @@ genereren en het geheel publiceren naar **GitHub Pages**. De portaalpagina
 (`cohort / jaar / vak / presentatie`) met per map het aantal presentaties, een
 zoekveld dat live filtert en markeert, en knoppen om alles in of uit te klappen.
 Per presentatie staan er links naar de slides en de PDF.
+
+### Incrementele PDF-builds (caching)
+
+PDF's worden niet gecommit; zonder caching zou élke run alle decks opnieuw
+renderen. `scripts/export-pdf-cached.js` cached daarom **per presentatie**:
+
+- Per deck wordt een **content-hash** berekend over alle bestanden in de
+  presentatiemap (m.u.v. de gegenereerde PDF) plus een `sharedHash` over alle
+  gedeelde assets (`shared/**`), de DeckTape-image en het script zelf.
+- De cache-key is content-addressed (`pdf-v1-<pad>-<hash>`): wijzigt één deck,
+  dan wordt alleen dat deck opnieuw gerenderd; wijzigt iets gedeelds (thema,
+  reveal.js, DeckTape-versie), dan alles.
+- De runtime-tokens van de GitHub-cache (`ACTIONS_RUNTIME_TOKEN`,
+  `ACTIONS_RESULTS_URL`) zijn alleen beschikbaar in JavaScript-actions, niet in
+  `run:`-stappen. De workflow exporteert ze daarom eerst via
+  `actions/github-script` naar `GITHUB_ENV`.
+- DeckTape is vastgepind op `astefanutti/decktape:3.12.0` (i.p.v. `latest`) voor
+  reproduceerbare cache-keys, en draait met `--user "$(id -u):$(id -g)"` zodat de
+  PDF's eigendom van de runner zijn.
+- Caching is **best-effort**: ontbreekt de runtime of faalt de cache-service, dan
+  valt de export terug op onvoorwaardelijk bouwen (het oude gedrag).
 
 ## Conventies
 
