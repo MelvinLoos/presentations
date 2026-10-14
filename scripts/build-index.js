@@ -19,6 +19,12 @@ const distDir = path.join(root, 'dist');
 
 const MARKERS = ['index.html', 'slides.md'];
 
+// De portaalpagina (dist/index.html) staat in de deploy náást de mappen
+// `presentations/` en `shared/` (zie .github/workflows/deploy.yml). De links
+// vanuit het portaal beginnen daarom met `presentations/`, anders wijzen ze
+// (op GitHub Pages) naar een pad dat niet bestaat.
+const WEB_PREFIX = 'presentations';
+
 /** Escapecode voor veilige HTML-interpolatie. */
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, (c) => (
@@ -98,8 +104,8 @@ const listItems = presentations.map((item) => {
       ${meta || tags ? `<div class="meta">${meta}${tags}</div>` : ''}
     </div>
     <div class="links">
-      <a class="btn" href="./${item.path}/">Presentatie</a>
-      <a class="btn btn-secondary" href="./${item.path}/presentation.pdf" download>PDF</a>
+      <a class="btn" href="./${WEB_PREFIX}/${item.path}/">Presentatie</a>
+      <a class="btn btn-secondary" href="./${WEB_PREFIX}/${item.path}/presentation.pdf" download>PDF</a>
     </div>
   </li>`;
 }).join('\n');
