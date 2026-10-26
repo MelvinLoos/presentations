@@ -60,7 +60,7 @@
 
 /* ----------------------------------------------------------------- base */
 .reveal-viewport{background:var(--canvas)}
-.reveal{font-family:var(--r-main-font);color:var(--ink);-webkit-font-smoothing:antialiased}
+.reveal{font-family:var(--r-main-font);font-size:var(--r-main-font-size);color:var(--ink);-webkit-font-smoothing:antialiased}
 .reveal .slides{text-align:left}
 /* reveal.js zet een inline `display` op elke slide (= config.display).
    Daarom zetten we display:'flex' in de Reveal-config; hier alleen de
@@ -72,6 +72,9 @@
   height:var(--slide-height,720px);
   flex-direction:column;
 }
+/* Een stack (houder van verticale slides) krijgt zelf geen kader, anders
+   telt de padding dubbel op de slides erin. */
+.reveal .slides>section.stack{padding:0}
 .reveal .slides section.bleed{padding:0;flex-direction:column}
 .reveal h1,.reveal h2,.reveal h3,.reveal h4{font-family:var(--r-heading-font);font-weight:700;text-transform:none;letter-spacing:-0.02em;line-height:1.02;margin:0}
 .reveal p{margin:0}
@@ -126,6 +129,23 @@
 .dark .body{color:#E4E4E4}
 .dark .kicker{color:var(--lime)}
 
+/* ------------------------------------------------------ markdown (slides.md)
+   Kale koppen, alinea's en lijsten uit markdown krijgen dezelfde maten als
+   .title--xl/.title--sm/.body. Via :not([class]) winnen expliciete klassen. */
+.reveal .slides section>h1:not([class]){font-size:84px}
+.reveal .slides section>h2:not([class]){font-size:46px;max-width:1080px}
+.reveal .slides section>h3:not([class]){font-size:28px;margin-top:8px}
+.reveal .slides section>p:not([class]){font-size:24px;line-height:1.35;color:var(--ink-soft);margin-top:18px}
+.reveal .slides section>ol:not([class]),
+.reveal .slides section>ul:not([class]){display:flex;flex-direction:column;gap:12px;margin-top:22px}
+.reveal .slides section>ol:not([class])>li,
+.reveal .slides section>ul:not([class])>li{font-size:24px;line-height:1.3;color:var(--ink-soft)}
+.reveal .slides section>ul:not([class])>li{position:relative;padding-left:32px}
+.reveal .slides section>ul:not([class])>li::before{content:"";position:absolute;left:0;top:8px;width:16px;height:16px;background:var(--lime)}
+.reveal .slides section.dark>p:not([class]),
+.reveal .slides section.dark>ol:not([class])>li,
+.reveal .slides section.dark>ul:not([class])>li{color:#E4E4E4}
+
 /* ------------------------------------------------------------ layout */
 .row{display:flex;gap:34px;flex:1;min-height:0}
 .row>*{min-width:0}
@@ -154,7 +174,7 @@
    `.glr-card` is de canonieke GLR-kaart (alias van `.card`); gebruik deze
    naam in de markdown-annotaties volgens de reveal-slide-builder skill. */
 .cards{display:flex;gap:16px;margin-top:26px}
-.card,.glr-card{flex:1;background:var(--subtle);border-radius:6px;padding:20px 20px 18px;display:flex;flex-direction:column}
+.card,.glr-card{flex:1;background:var(--subtle);color:var(--ink);border-radius:6px;padding:20px 20px 18px;display:flex;flex-direction:column}
 .card--accent,.glr-card--accent{background:var(--lime)}
 .card .k,.glr-card .k{font-family:'Space Grotesk',sans-serif;font-size:14px;letter-spacing:.08em;
   text-transform:uppercase;color:var(--muted);margin-bottom:14px}
@@ -220,9 +240,13 @@ figcaption{font-size:16px;color:var(--muted);margin-top:10px;line-height:1.3;fle
    Reveal.js code-blokken met syntax highlighting en regelaccentuering
    (<pre><code data-line-numbers="1-3|5">). Het `.terminal-window`-component
    verpakt een codeblok in een herkenbaar terminalvenster (CSD-didactiek). */
-.reveal pre{width:100%;margin:20px 0 0;font-size:0.55em;line-height:1.5;
+/* `position:relative`: de stap-klonen van RevealHighlight ([1|3]) liggen
+   absoluut over het origineel. */
+.reveal pre{position:relative;width:100%;margin:20px 0 0;font-size:20px;line-height:1.5;
   box-shadow:none;background:transparent}
-.reveal pre code{display:block;padding:22px 26px;max-height:520px;border-radius:6px;
+/* border-box: reveal.css geeft .hljs `min-height:100%`; anders steekt de
+   padding onder de <pre> uit. */
+.reveal pre code{display:block;box-sizing:border-box;padding:22px 26px;max-height:520px;border-radius:6px;
   background:#111111;color:#F4F4F6;font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace}
 .reveal code{font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace}
 .reveal .hljs{background:#111111}
