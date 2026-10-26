@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Elevator Pitches &amp; MVP kick-off — GLR CSD</title>
+<meta name="description" content="Lesflow voor BEROEPS2 week 4: de laatste elevator pitches op het podium en de start van de MVP met Design Thinking en GitHub Projects.">
+<meta name="author" content="Docententeam CSD">
 
 <link rel="stylesheet" href="../../../../../shared/vendor/reveal/reveal.css">
 <link rel="stylesheet" href="../../../../../shared/vendor/reveal/plugin/highlight/monokai.css">
@@ -38,11 +40,25 @@
 
 <script>
   Reveal.initialize({
+    width: 1280,
+    height: 720,
+    margin: 0,
+    display: 'flex',          /* slides zijn flex-kolommen (huisstijl-layout) */
+    center: false,
+    minScale: 0.2,
+    maxScale: 1.6,
     hash: true,
-    slideNumber: false,
-    display: 'flex',
+    progress: true,
+    controlsLayout: 'bottom-right',
+    slideNumber: false,       /* eigen paginanummer in de footer */
+    transition: 'slide',
+    backgroundTransition: 'fade',
     plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealSearch, RevealZoom],
     markdown: { smartypants: true }
+  }).then(function () {
+    /* De markdown-plugin rendert de slides pas na DOMContentLoaded;
+       daarom de GLR-componenten (timers) hier opnieuw initialiseren. */
+    GLRPlugins.initAll();
   });
 </script>
 

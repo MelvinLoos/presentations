@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Titel van de les — GLR CSD</title>
+<meta name="description" content="Eén zin over de les: onderwerp, doelgroep en werkvorm.">
+<meta name="author" content="Docententeam CSD">
 
 <!--
   Deze wrapper laadt de inhoud uit slides.md met de reveal.js markdown-plugin
@@ -34,10 +36,16 @@
 
 <div class="reveal">
   <div class="slides">
+    <!--
+      De scheidingstekens eisen een lege regel voor en na de marker. Daardoor
+      wordt het YAML-frontmatter-blok bovenin slides.md (zonder lege regel rond
+      de markers) niet als slide opgevat. Die frontmatter is metadata voor de
+      portaalpagina (scripts/build-index.js); de marker erin verbergt de sectie.
+    -->
     <section
       data-markdown="slides.md"
-      data-separator="^---$"
-      data-separator-vertical="^--$"
+      data-separator="\n---\n\n"
+      data-separator-vertical="\n--\n\n"
       data-separator-notes="^Note:"
       data-charset="utf-8"></section>
   </div>
@@ -53,11 +61,25 @@
 
 <script>
   Reveal.initialize({
+    width: 1280,
+    height: 720,
+    margin: 0,
+    display: 'flex',          /* slides zijn flex-kolommen (huisstijl-layout) */
+    center: false,
+    minScale: 0.2,
+    maxScale: 1.6,
     hash: true,
-    slideNumber: false,
-    display: 'flex',
+    progress: true,
+    controlsLayout: 'bottom-right',
+    slideNumber: false,       /* eigen paginanummer in de footer */
+    transition: 'slide',
+    backgroundTransition: 'fade',
     plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealSearch, RevealZoom],
     markdown: { smartypants: true }
+  }).then(function () {
+    /* De markdown-plugin rendert de slides pas na DOMContentLoaded;
+       daarom de GLR-componenten (timers) hier opnieuw initialiseren. */
+    GLRPlugins.initAll();
   });
 </script>
 
