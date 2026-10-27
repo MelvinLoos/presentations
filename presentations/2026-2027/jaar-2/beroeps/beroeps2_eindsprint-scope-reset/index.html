@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Eindsprint &amp; Scope Reset — GLR CSD</title>
+<meta name="description" content="Lesflow voor BEROEPS2 (Stop de Ontkoking, GLR Food Freaks): zelfevaluatie met een bewijscheck op main, scope-onderhandeling met de klant, reset naar een PHP/MySQL-MVP, Regime A of B, de PR-Exit-Ticket en de eisen aan de 4-minuten Release Video.">
+<meta name="author" content="Docententeam CSD">
+
+<link rel="stylesheet" href="../../../../../shared/vendor/reveal/reveal.css">
+<link rel="stylesheet" href="../../../../../shared/vendor/reveal/plugin/highlight/monokai.css">
+<link rel="stylesheet" href="../../../../../shared/css/glr-theme.css">
+<style>
+  /* Presentatiespecifieke bouwstenen (niet in het gedeelde thema). */
+
+  /* Bericht van de opdrachtgever */
+  .msg{background:var(--white);border:1px solid var(--border);border-radius:6px;margin-top:24px;overflow:hidden}
+  .msg-head{margin:0;display:grid;grid-template-columns:150px 1fr;row-gap:8px;padding:20px 28px;background:var(--subtle);border-bottom:1px solid var(--border)}
+  .msg-head dt{font-family:'Space Grotesk',sans-serif;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-top:3px}
+  .msg-head dd{margin:0;font-size:20px;color:var(--ink)}
+  .msg-body{margin:24px 28px 26px;padding-left:24px;border-left:8px solid var(--lime)}
+  .msg-body p{font-size:23px;line-height:1.4;color:var(--ink-soft)}
+
+  /* Kaartvarianten: valkuil en geschrapt */
+  .glr-card--warn{background:#FBEFEC;border-left:8px solid #B3301B}
+  .glr-card--warn .k{color:#9A2916}
+  .glr-card--muted{background:transparent;border:2px dashed var(--border)}
+  .glr-card--muted .k{color:var(--muted)}
+  .glr-card--muted li{color:var(--muted)}
+
+  /* Compacte lijsten in kaarten */
+  .glr-card ul.tight{display:flex;flex-direction:column;gap:10px}
+  .glr-card ul.tight li{position:relative;padding-left:22px;font-size:17px;line-height:1.3;color:var(--ink-soft)}
+  .glr-card ul.tight li::before{content:"";position:absolute;left:0;top:6px;width:11px;height:11px;background:var(--ink)}
+  .glr-card--accent ul.tight li{color:#243a06}
+  .glr-card--warn ul.tight li::before{background:#B3301B}
+  .glr-card--muted ul.tight li::before{background:var(--border)}
+  .glr-card .pill{align-self:flex-start;margin-bottom:12px}
+  .glr-card .rule{font-size:16px;font-weight:700;color:#9A2916;margin-bottom:10px}
+
+  /* Rollen per regime */
+  .role{padding-top:10px;margin-top:10px;border-top:1px solid rgba(17,17,17,.10)}
+  .role:first-of-type{border-top:0;margin-top:0;padding-top:0}
+  .role h4{font-family:'Space Grotesk',sans-serif;font-size:19px;margin-bottom:4px}
+  .reveal .role p{font-size:17px;line-height:1.3}
+
+  /* Kolomverhoudingen */
+  .cards--moscow>.glr-card:first-child{flex:1.5}
+  .cards .glr-card h3{line-height:1.1}
+
+  /* Genummerde rij met tijdcode */
+  .listrow--time{grid-template-columns:178px 1fr}
+  .listrow--time .n{font-size:22px;padding-top:3px}
+  .rows--tight{gap:14px;margin-top:20px}
+  .rows--tight .listrow{padding-top:12px}
+  .rows--tight .listrow h3{font-size:22px}
+  .rows--tight .listrow p{font-size:18px}
+
+  /* Alarmblok (consequentie) */
+  .defbox--alert{border-left-color:#B3301B}
+  .defbox--alert .k{color:#9A2916}
+  .defbox--sm{padding:18px 26px}
+  .defbox--sm p{font-size:20px}
+
+  /* Fist-to-Five-schaal */
+  .scale{display:flex;gap:6px;margin:4px 0 14px}
+  .scale span{flex:1;text-align:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:17px;padding:6px 0;border-radius:3px;background:var(--white);color:var(--ink)}
+  .scale span:last-child{background:var(--ink);color:var(--lime)}
+
+  /* Zelfevaluatie: gevoel */
+  .big-q{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:150px;line-height:1;
+    color:var(--lime);letter-spacing:-.03em;margin-top:28px}
+
+  /* Zelfevaluatie: telkaart bewijscheck */
+  .tally{display:flex;flex-direction:column;gap:10px;margin-top:20px}
+  .tally-row{display:grid;grid-template-columns:44px 1fr 150px;gap:18px;align-items:center;
+    background:var(--subtle);border-radius:6px;padding:12px 18px}
+  .tally-n{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:26px;color:var(--green-dk)}
+  .tally-row h3{font-size:21px;margin-bottom:2px}
+  .tally-row p{font-size:17px;color:var(--ink-soft);line-height:1.3}
+  .tally-a{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:28px;text-align:right;
+    color:var(--ink);letter-spacing:.04em}
+  .tally-row--sum{background:var(--lime)}
+  .tally-row--sum .tally-n{color:var(--ink)}
+  .tally-row--sum p{color:#243a06}
+
+  /* IJzeren driehoek (inline svg) */
+  .triangle svg{width:100%;height:auto;display:block}
+  .tri-name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:21px}
+  .tri-tag{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;letter-spacing:.12em}
+  .tri-sub{font-family:'Hanken Grotesk',sans-serif;font-size:18px}
+
+  /* Regimematrix (2x2) */
+  .matrix{display:grid;grid-template-columns:96px 1fr 1fr;grid-template-rows:1fr 1fr 34px;gap:12px;
+    margin-top:22px;flex:1;min-height:0;max-height:400px}
+  .mx-y,.mx-x{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--muted);display:flex;align-items:center}
+  .mx-x{justify-content:center}
+  .mx-cell{border-radius:6px;padding:18px 22px;display:flex;flex-direction:column;justify-content:center}
+  .mx-cell .k{font-family:'Space Grotesk',sans-serif;font-size:14px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+  .mx-cell h3{font-size:30px;margin-bottom:6px}
+  .mx-cell p{font-size:19px;line-height:1.3}
+  .mx-a{background:var(--lime)}
+  .mx-a .k{color:#33520a}
+  .mx-a p{color:#243a06}
+  .mx-b{background:var(--ink)}
+  .mx-b .k{color:var(--lime)}
+  .mx-b h3{color:var(--white)}
+  .mx-b p{color:#E4E4E4}
+  .mx-ghost{border:2px dashed var(--border)}
+  .mx-ghost .k,.mx-ghost p{color:var(--muted)}
+
+  .note-line{font-size:22px;color:var(--ink-soft);margin-top:20px}
+  .dark .defbox{background:#1C1C1C}
+  .dark .defbox .k{color:var(--lime)}
+  .dark .check li{color:#E4E4E4}
+  .dark .t-time{color:var(--white)}
+  .dark .t-label{color:#BDBDBD}
+  .dark .t-track{stroke:#333}
+  .dark .t-btn.t-reset{border-color:#444;color:#BDBDBD}
+</style>
+</head>
+<body>
+
+<div class="reveal">
+  <div class="slides">
+    <!--
+      De scheidingstekens eisen een lege regel voor en na de marker. Daardoor
+      wordt het YAML-frontmatter-blok bovenin slides.md (zonder lege regel rond
+      de markers) niet als slide opgevat. Die frontmatter is metadata voor de
+      portaalpagina (scripts/build-index.js); de marker erin verbergt de sectie.
+    -->
+    <section
+      data-markdown="slides.md"
+      data-separator="\n---\n\n"
+      data-separator-vertical="\n--\n\n"
+      data-separator-notes="^Note:"
+      data-charset="utf-8"></section>
+  </div>
+</div>
+
+<script src="../../../../../shared/vendor/reveal/reveal.js"></script>
+<script src="../../../../../shared/vendor/reveal/plugin/markdown/markdown.js"></script>
+<script src="../../../../../shared/vendor/reveal/plugin/highlight/highlight.js"></script>
+<script src="../../../../../shared/vendor/reveal/plugin/notes/notes.js"></script>
+<script src="../../../../../shared/vendor/reveal/plugin/search/search.js"></script>
+<script src="../../../../../shared/vendor/reveal/plugin/zoom/zoom.js"></script>
+<script src="../../../../../shared/js/glr-plugins.js"></script>
+
+<script>
+  Reveal.initialize({
+    width: 1280,
+    height: 720,
+    margin: 0,
+    display: 'flex',          /* slides zijn flex-kolommen (huisstijl-layout) */
+    center: false,
+    minScale: 0.2,
+    maxScale: 1.6,
+    hash: true,
+    progress: true,
+    controlsLayout: 'bottom-right',
+    slideNumber: false,       /* eigen paginanummer in de footer */
+    transition: 'slide',
+    backgroundTransition: 'fade',
+    plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealSearch, RevealZoom],
+    markdown: { smartypants: true }
+  }).then(function () {
+    /* De markdown-plugin rendert de slides pas na DOMContentLoaded;
+       daarom de GLR-componenten (timers) hier opnieuw initialiseren. */
+    GLRPlugins.initAll();
+  });
+</script>
+
+</body>
+</html>
