@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Typografie — Design1 · GLR Media Creative</title>
+<meta name="description" content="Design1 P1, les typografie: soorten letters, hiërarchie, interlinie en kerning, en typografie kiezen bij een sfeer. Met twee Figma-opdrachten en een vooruitblik op het onderzoek voor het logo van Museum de Pixel.">
+<meta name="author" content="GLR Media Creative">
+
+<!--
+  Deze wrapper laadt de inhoud uit slides.md met de reveal.js markdown-plugin
+  en de gedeelde GLR-huisstijl.
+
+  PADEN — let op:
+  Dit bestand hoort te staan in
+      presentations/<cohort>/<jaar>/<vak>/<presentatie>/
+  Dat is 5 niveaus onder de repo-root; daarom verwijst `../../../../../shared/`
+  naar de gedeelde map. Nest je een presentatie dieper of ondieper, pas dan het
+  aantal `../` aan (of hergebruik de opbouw van deze presentaties).
+
+  LOKAAL BEKIJKEN:
+  De markdown-plugin haalt slides.md op via HTTP, dus open dit bestand via een
+  servertje en niet via file:// →  `npm run serve` en ga naar /presentations/...
+-->
+
+<link rel="stylesheet" href="../../../../../shared/vendor/reveal/reveal.css">
+<link rel="stylesheet" href="../../../../../shared/vendor/reveal/plugin/highlight/monokai.css">
+<link rel="stylesheet" href="../../../../../shared/css/glr-theme.css">
+
+<style>
+  /* Presentatiespecifieke bouwstenen (niet in het gedeelde thema). */
+
+  /* Beeldvergelijking: twee of vier beelden naast elkaar, volledig zichtbaar */
+  .pair{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:24px;flex:1;min-height:0}
+  .pair--4{grid-template-columns:repeat(4,1fr);gap:14px}
+  .pair figure{min-height:0}
+  .pair figure img{background:#fff;border:1px solid var(--border)}
+  .pair .tag{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px;color:var(--ink);margin-top:10px}
+  .pair .tag span{color:var(--green-dk);margin-right:8px}
+
+  /* Kaartvarianten */
+  .glr-card--warn{background:#FBEFEC;border-left:8px solid #B3301B}
+  .glr-card--warn .k{color:#9A2916}
+  .glr-card ul.tight{display:flex;flex-direction:column;gap:8px}
+  .glr-card ul.tight li{position:relative;padding-left:22px;font-size:17px;line-height:1.3;color:var(--ink-soft)}
+  .glr-card ul.tight li::before{content:"";position:absolute;left:0;top:6px;width:11px;height:11px;background:var(--ink)}
+  .glr-card--accent ul.tight li{color:#243a06}
+  .dark .glr-card{background:#1E1E1E;color:#fff}
+  .dark .glr-card h3{color:#fff}
+  .dark .glr-card p{color:#D6D6D6}
+  .dark .glr-card .k{color:var(--lime)}
+
+  .cards--lg .glr-card{padding:26px 26px 24px}
+  .cards--lg .glr-card h3{font-size:28px;margin-bottom:10px}
+  .cards--lg .glr-card p{font-size:21px}
+  .grid2--pi .glr-card{padding:14px 18px}
+  .grid2--pi .glr-card p{font-size:19px}
+
+  /* Blokvarianten */
+  .dark .defbox{background:#1E1E1E}
+  .dark .defbox .k{color:var(--lime)}
+  .defbox--sm{padding:16px 24px}
+  .defbox--sm p{font-size:20px}
+  .defbox--alert{border-left-color:#B3301B}
+  .defbox--alert .k{color:#9A2916}
+  .rows--tight{gap:14px;margin-top:20px}
+  .rows--tight .listrow{padding-top:12px}
+  .rows--tight .listrow h3{font-size:22px}
+  .rows--tight .listrow p{font-size:18px}
+  .listrow--now{background:var(--lime);border-radius:6px;padding:12px 14px !important;border-top:0 !important}
+  .listrow--now .n{color:var(--ink)}
+  .reveal .listrow--now p{color:#243a06}
+  .listrow--time{grid-template-columns:120px 1fr}
+  .listrow--time .n{font-size:22px;padding-top:2px}
+
+  /* Live typografie-demo's (hiërarchie, interlinie, kerning) */
+  .demo{background:#fff;border:1px solid var(--border);border-radius:6px;padding:26px 30px;display:flex;flex-direction:column;min-height:0}
+  .demo .k{font-family:'Space Grotesk',sans-serif;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+  .demo--flat p{font-family:'Hanken Grotesk',sans-serif;font-size:24px;line-height:1.35;color:var(--ink-soft)}
+  .demo-line{display:flex;align-items:center;gap:16px}
+  .demo-line+.demo-line{margin-top:14px}
+  .demo-line .badge{margin-left:0;flex:0 0 auto}
+  .demo-line .demo-h2,.demo-line .demo-p{margin-top:0}
+  .demo-h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:66px;letter-spacing:-.03em;line-height:.95;color:var(--ink)}
+  .demo-h2{font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:30px;color:var(--ink);margin-top:12px}
+  .demo-p{font-size:19px;color:var(--muted);line-height:1.35;margin-top:22px}
+  .badge{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;
+    background:var(--ink);color:var(--lime);font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px;
+    vertical-align:middle;margin-left:12px;letter-spacing:0}
+  .leading{font-size:28px;color:var(--ink-soft)}
+  .leading--tight{line-height:.92}
+  .leading--good{line-height:1.45}
+  .kern{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:104px;line-height:1;color:var(--ink);letter-spacing:0}
+  .kern .w{letter-spacing:.32em}
+  .kern .n{letter-spacing:-.09em}
+  .kern--good{letter-spacing:-.03em}
+
+  /* Video met kijkvraag */
+  .row--video{margin-top:20px;align-items:center}
+  .row--video .embed{flex:0 0 auto}
+
+  /* Rubric: drie niveaus naast elkaar */
+  .rubric{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px}
+  .rubric .glr-card h3{font-size:24px}
+  .rubric .glr-card p{font-size:20px;line-height:1.35}
+
+  /* Grote vraag op een donkere slide */
+  .big-q{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:58px;line-height:1.05;
+    letter-spacing:-.02em;color:#fff;max-width:1060px}
+</style>
+</head>
+<body>
+
+<div class="reveal">
+  <div class="slides">
+    <!--
+      De scheidingstekens eisen een lege regel voor en na de marker. Daardoor
+      wordt het YAML-frontmatter-blok bovenin slides.md (zonder lege regel rond
+      de markers) niet als slide opgevat. Die frontmatter is metadata voor de
+      portaalpagina (scripts/build-index.js); de marker erin verbergt de sectie.
+    -->
+    <section
+      data-markdown="slides.md"
+      data-separator="\n---\n\n"
+      data-separator-vertical="\n--\n\n"
+      data-separator-notes="^Note:"
+      data-charset="utf-8"></section>
+  </div>
+</div>
+
+<script src="../../../../../shared/vendor/reveal/reveal.js"></script>
+<script src="../../../../../shared/vendor/reveal/plugin/markdown/markdown.js"></script>
+<script src="../../../../../shared/vendor/reveal/plugin/highlight/highlight.js"></script>
+<script src="../../../../../shared/vendor/reveal/plugin/notes/notes.js"></script>
+<script src="../../../../../shared/vendor/reveal/plugin/search/search.js"></script>
+<script src="../../../../../shared/vendor/reveal/plugin/zoom/zoom.js"></script>
+<script src="../../../../../shared/js/glr-plugins.js"></script>
+
+<script>
+  Reveal.initialize({
+    width: 1280,
+    height: 720,
+    margin: 0,
+    display: 'flex',          /* slides zijn flex-kolommen (huisstijl-layout) */
+    center: false,
+    minScale: 0.2,
+    maxScale: 1.6,
+    hash: true,
+    progress: true,
+    controlsLayout: 'bottom-right',
+    slideNumber: false,       /* eigen paginanummer in de footer */
+    transition: 'slide',
+    backgroundTransition: 'fade',
+    plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealSearch, RevealZoom],
+    markdown: { smartypants: true }
+  }).then(function () {
+    /* De markdown-plugin rendert de slides pas na DOMContentLoaded;
+       daarom de GLR-componenten (timers) hier opnieuw initialiseren. */
+    GLRPlugins.initAll();
+  });
+</script>
+
+</body>
+</html>
