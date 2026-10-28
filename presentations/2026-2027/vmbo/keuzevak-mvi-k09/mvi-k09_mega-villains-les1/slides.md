@@ -80,7 +80,7 @@ Note: **Gagné 1: aandacht trekken (± 5 min).** Lees de stelling hardop voor. I
         <li>Je werkboekje</li>
         <li>3 kleuren markeerstift</li>
         <li>iMac met Figma</li>
-        <li>Begrippenlist</li>
+        <li>Begrippenlijst</li>
         <li>Instructies</li>
       </ul>
     </div>
@@ -89,7 +89,7 @@ Note: **Gagné 1: aandacht trekken (± 5 min).** Lees de stelling hardop voor. I
 
 <div class="footer"><span>Mega Villains Inc. · Les 1</span><span class="num">03</span></div>
 
-Note: **Gagné 2: doelen delen (± 4 min).** Loop de vier blokken kort door. De grijze zinnen zijn de leerdoelen, in gewone taal. Zeg erbij: "Na elk stukje uitleg ga je meteen zelf iets doen in je werkboekje. Je zit dus nooit lang te luisteren." De pauze staat tussen de persona en de eisen. Wijs op het rechterblok: check nu of iedereen een werkboekje, stiften en een werkende laptop met Figma heeft. Nog niet ingelogd in Figma? Laat ze dat nu doen, dan ben je straks geen tijd kwijt. Vertel erbij dat dit precies is hoe een ontwerpbureau een project start: briefing, doelgroep, eisen, ontwerp.
+Note: **Gagné 2: doelen delen (± 4 min).** Loop de vier blokken kort door. De grijze zinnen zijn de leerdoelen, in gewone taal. Zeg erbij: "Na elk stukje uitleg ga je meteen zelf iets doen in je werkboekje. Je zit dus nooit lang te luisteren." De pauze staat tussen de persona en de eisen. Wijs op het rechterblok: check nu of iedereen een werkboekje, stiften en een iMac met Figma heeft. Nog niet ingelogd in Figma? Laat ze dat nu doen, dan ben je straks geen tijd kwijt. Vertel erbij dat dit precies is hoe een ontwerpbureau een project start: briefing, doelgroep, eisen, ontwerp.
 
 ---
 
@@ -474,7 +474,7 @@ Note: **Gagné 6 + 7: toepassen en feedback (8 min).** Het doel komt pas nu, omd
     <p class="break-title">Pauze!</p>
     <h2 style="font-size:36px;margin-top:22px;max-width:640px">Even geen scherm, dan werkt je brein straks weer scherp</h2>
     <ul class="checklist" style="margin-top:24px">
-      <li>Laptop dicht</li>
+      <li>Weg van de iMac</li>
       <li>Ga even lopen of naar buiten</li>
       <li>Drink water</li>
     </ul>
@@ -715,4 +715,4 @@ Note: **Gagné 6 + 9: toepassen en transfer (20 min).** De voorbeeldkaart in het
 
 <div class="footer"><span>Mega Villains Inc. · Les 1</span><span class="num">18</span></div>
 
-Note: **Gagné 8 + 9: check en vooruitblik (± 5 min).** Lees de checklist voor en laat iedereen bij zichzelf afvinken in het werkboekje. Vraag daarna: "Steek je hand op als je alle vier de opdrachten af hebt." Wie nog iets mist, weet nu wat er volgende week eerst moet. **Exit-vraag (op de slide):** eerst 30 seconden aan de buur vertellen, daarna 3 à 4 leerlingen hardop. Zo verbind je de persona met het ontwerp van volgende week. Vooruitblik: met een flowchart teken je hoe je door de drie pagina's klikt, met een wireframe schets je elke pagina in grijze blokken (zoals de schetsjes van vandaag), en met een moodboard kies je de stijl. Sluit af met: "Goed gedaan, schurken. Tot volgende week!" Laat de laptops netjes afsluiten en de werkboekjes inleveren of meenemen, afhankelijk van de afspraak met de vmbo-school.
+Note: **Gagné 8 + 9: check en vooruitblik (± 5 min).** Lees de checklist voor en laat iedereen bij zichzelf afvinken in het werkboekje. Vraag daarna: "Steek je hand op als je alle vier de opdrachten af hebt." Wie nog iets mist, weet nu wat er volgende week eerst moet. **Exit-vraag (op de slide):** eerst 30 seconden aan de buur vertellen, daarna 3 à 4 leerlingen hardop. Zo verbind je de persona met het ontwerp van volgende week. Vooruitblik: met een flowchart teken je hoe je door de drie pagina's klikt, met een wireframe schets je elke pagina in grijze blokken (zoals de schetsjes van vandaag), en met een moodboard kies je de stijl. Sluit af met: "Goed gedaan, schurken. Tot volgende week!" Laat de iMacs netjes afsluiten en de werkboekjes inleveren of meenemen, afhankelijk van de afspraak met de vmbo-school.
