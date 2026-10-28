@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Input velden — Interface1 · GLR CSD</title>
+<meta name="description" content="Interface1 hoofdstuk 5: HTML-formulieren met form, input, label, textarea en select, het verschil tussen GET en POST, en invoer live uitlezen met addEventListener en event.target.value. Met opdracht 5.A, 5.B en 5.C en live demo's in de slides.">
+<meta name="author" content="Docententeam CSD">
+
+<!--
+  Deze wrapper laadt de inhoud uit slides.md met de reveal.js markdown-plugin
+  en de gedeelde GLR-huisstijl.
+
+  PADEN — let op:
+  Dit bestand hoort te staan in
+      presentations/<cohort>/<jaar>/<vak>/<presentatie>/
+  Dat is 5 niveaus onder de repo-root; daarom verwijst `../../../../../shared/`
+  naar de gedeelde map. Nest je een presentatie dieper of ondieper, pas dan het
+  aantal `../` aan (of hergebruik de opbouw van deze presentaties).
+
+  LOKAAL BEKIJKEN:
+  De markdown-plugin haalt slides.md op via HTTP, dus open dit bestand via een
+  servertje en niet via file:// →  `npm run serve` en ga naar /presentations/...
+-->
+
+<link rel="stylesheet" href="../../../../../shared/vendor/reveal/reveal.css">
+<link rel="stylesheet" href="../../../../../shared/vendor/reveal/plugin/highlight/monokai.css">
+<link rel="stylesheet" href="../../../../../shared/css/glr-theme.css">
+
+<style>
+  /* Presentatiespecifieke bouwstenen (niet in het gedeelde thema). */
+
+  /* Inline code in lopende tekst */
+  .reveal h2 code,.reveal p code,.reveal li code,.reveal h3 code{background:#E9EBEF;color:var(--ink);
+    padding:.04em .28em;border-radius:3px;font-size:.88em}
+  .reveal .dark p code,.reveal .dark li code{background:#2A2A2A;color:var(--lime)}
+  .reveal h2 code{font-size:.78em;font-weight:500;padding:0 .2em;background:#E4F5C4}
+  .reveal .dark h2 code{background:#2A2A2A;color:var(--lime)}
+  .reveal .check li code{white-space:nowrap}
+
+  /* Kleinere code zodat lange regels naast een demo passen */
+  .code-sm pre{font-size:16px}
+  .code-sm pre code{padding:18px 22px}
+
+  /* Opdracht- en check-invarianten */
+  .pill--ai{background:#B3301B;color:#fff}
+  .defbox--sm{padding:16px 24px}
+  .defbox--sm p{font-size:20px}
+  .dark .defbox{background:#1E1E1E}
+  .dark .defbox p{color:#fff}
+  .dark .defbox .k{color:var(--lime)}
+  .rows--tight{gap:12px;margin-top:20px}
+  .rows--tight .listrow{padding-top:10px}
+  .rows--tight .listrow h3{font-size:22px}
+  .rows--tight .listrow p{font-size:18px}
+  .grid2--pi .glr-card{padding:14px 18px}
+  .grid2--pi .glr-card p{font-size:20px}
+  .grid2--pi .glr-card p code{font-size:22px}
+  .glr-card code{font-size:.92em}
+  .big-q{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:58px;line-height:1.05;
+    letter-spacing:-.02em;color:#fff;max-width:1060px}
+
+  /* Live demo: een nagebootst browservenster met echte formulierelementen */
+  .browser{background:#fff;border:1px solid var(--border);border-radius:8px;overflow:hidden;
+    display:flex;flex-direction:column;box-shadow:0 10px 28px rgba(17,17,17,.12);margin-top:20px}
+  .browser__bar{display:flex;align-items:center;gap:7px;padding:10px 14px;background:var(--subtle);
+    border-bottom:1px solid var(--border)}
+  .browser__bar .dot{flex:0 0 auto;width:11px;height:11px;border-radius:50%;background:#D1D5DB}
+  .browser__url{flex:1;min-width:0;margin-left:8px;background:#fff;border:1px solid var(--border);border-radius:14px;
+    padding:4px 14px;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:15px;color:var(--ink-soft);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:background .4s}
+  .browser__url.is-new{background:var(--lime);color:var(--ink)}
+  .browser__body{padding:18px 22px;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:20px;
+    line-height:1.5;color:#111}
+  .browser__body input,.browser__body select,.browser__body textarea,.browser__body button{font:inherit;font-size:18px}
+  .browser__body input[type=text],.browser__body input[type=email],.browser__body input:not([type]){width:260px;max-width:100%}
+  .browser__body input[type=submit]{margin-top:6px}
+  .browser__body h1{font-family:Georgia,'Times New Roman',serif;font-size:40px;font-weight:700;letter-spacing:0;
+    line-height:1.15;min-height:46px;margin:0 0 12px}
+  .browser__post{display:none;padding:10px 22px;border-top:1px dashed var(--border);background:#FFF8E6;
+    font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:15px;color:var(--ink-soft)}
+  .browser__post.is-shown{display:block}
+  .field{display:flex;align-items:center;gap:12px;margin-top:8px}
+  .field label{flex:0 0 150px}
+
+  /* Live demo: overzicht van input types */
+  .typegrid{display:grid;grid-template-columns:repeat(5,1fr);gap:18px 22px}
+  .typegrid .tcell{display:flex;flex-direction:column;gap:8px;min-width:0}
+  .typegrid .tcell code{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:15px;color:var(--green-dk)}
+  .typegrid input{max-width:100%;font-size:16px}
+  .typegrid input[type=color]{width:70px;height:40px}
+  .typegrid .opt{font-size:17px;display:flex;align-items:center;gap:6px}
+
+  /* Live demo: nagebootste console uit de developer tools */
+  .devconsole{background:#1C1C1C;color:#E4E4E4;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;
+    font-size:16px;padding:10px 16px 14px;min-height:120px}
+  .devconsole__head{display:flex;justify-content:space-between;align-items:center;color:#9AA0A6;font-size:12px;
+    letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+  .devconsole__head button{font:inherit;color:#9AA0A6;background:none;border:1px solid #444;border-radius:3px;
+    padding:2px 8px;cursor:pointer}
+  .devconsole ol{list-style:none;margin:0;padding:0}
+  .devconsole li{padding:3px 0;border-bottom:1px solid #2C2C2C}
+  .devconsole li::before{content:"> ";color:#6B7280}
+  .devconsole .str{color:var(--lime)}
+</style>
+</head>
+<body>
+
+<div class="reveal">
+  <div class="slides">
+    <!--
+      De scheidingstekens eisen een lege regel voor en na de marker. Daardoor
+      wordt het YAML-frontmatter-blok bovenin slides.md (zonder lege regel rond
+      de markers) niet als slide opgevat. Die frontmatter is metadata voor de
+      portaalpagina (scripts/build-index.js); de marker erin verbergt de sectie.
+    -->
+    <section
+      data-markdown="slides.md"
+      data-separator="\n---\n\n"
+      data-separator-vertical="\n--\n\n"
+      data-separator-notes="^Note:"
+      data-charset="utf-8"></section>
+  </div>
+</div>
+
+<script src="../../../../../shared/vendor/reveal/reveal.js"></script>
+<script src="../../../../../shared/vendor/reveal/plugin/markdown/markdown.js"></script>
+<script src="../../../../../shared/vendor/reveal/plugin/highlight/highlight.js"></script>
+<script src="../../../../../shared/vendor/reveal/plugin/notes/notes.js"></script>
+<script src="../../../../../shared/vendor/reveal/plugin/search/search.js"></script>
+<script src="../../../../../shared/vendor/reveal/plugin/zoom/zoom.js"></script>
+<script src="../../../../../shared/js/glr-plugins.js"></script>
+
+<script>
+  /* Live demo's in de slides. Formulieren worden nooit echt verzonden: we
+     tonen in de nagebootste adresbalk wat de browser zou versturen. */
+  function initFormDemos() {
+    document.querySelectorAll('.browser form').forEach(function (form) {
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        var browser = form.closest('.browser');
+        var url = browser.querySelector('.browser__url');
+        var post = browser.querySelector('.browser__post');
+        var query = new URLSearchParams(new FormData(form)).toString();
+        var page = form.dataset.page || 'index.html';
+
+        if ((form.getAttribute('method') || 'get').toLowerCase() === 'post') {
+          url.textContent = page;
+          if (post) {
+            post.textContent = 'Onzichtbaar meegestuurd: ' + (query || '(niets)');
+            post.classList.add('is-shown');
+          }
+        } else {
+          url.textContent = page + '?' + query;
+        }
+        url.classList.add('is-new');
+        setTimeout(function () { url.classList.remove('is-new'); }, 700);
+      });
+    });
+
+    /* Opdracht 5.C: dezelfde code als op de slide */
+    document.querySelectorAll('[data-demo="live-h1"]').forEach(function (demo) {
+      demo.querySelector('input').addEventListener('keyup', function (event) {
+        demo.querySelector('h1').innerText = event.target.value;
+      });
+    });
+
+    /* console.log(event.target.value) bij elke keyup */
+    document.querySelectorAll('[data-demo="console"]').forEach(function (demo) {
+      var list = demo.querySelector('.devconsole ol');
+      demo.querySelector('input').addEventListener('keyup', function (event) {
+        var li = document.createElement('li');
+        var str = document.createElement('span');
+        str.className = 'str';
+        str.textContent = '"' + event.target.value + '"';
+        li.appendChild(str);
+        list.appendChild(li);
+        while (list.children.length > 5) list.removeChild(list.firstChild);
+      });
+      demo.querySelector('.devconsole__head button').addEventListener('click', function () {
+        list.innerHTML = '';
+      });
+    });
+
+    /* Een select met focus zou de pijltjestoetsen van reveal.js overnemen */
+    document.querySelectorAll('.browser select').forEach(function (select) {
+      select.addEventListener('change', function () { select.blur(); });
+    });
+  }
+
+  Reveal.initialize({
+    width: 1280,
+    height: 720,
+    margin: 0,
+    display: 'flex',          /* slides zijn flex-kolommen (huisstijl-layout) */
+    center: false,
+    minScale: 0.2,
+    maxScale: 1.6,
+    hash: true,
+    progress: true,
+    controlsLayout: 'bottom-right',
+    slideNumber: false,       /* eigen paginanummer in de footer */
+    transition: 'slide',
+    backgroundTransition: 'fade',
+    plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealSearch, RevealZoom],
+    markdown: { smartypants: true }
+  }).then(function () {
+    /* De markdown-plugin rendert de slides pas na DOMContentLoaded;
+       daarom de GLR-componenten (timers) en de demo's hier initialiseren. */
+    GLRPlugins.initAll();
+    initFormDemos();
+  });
+</script>
+
+</body>
+</html>
